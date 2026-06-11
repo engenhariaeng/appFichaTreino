@@ -32,16 +32,55 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 .header-actions{display:flex;gap:8px;}
 
 /* LAYOUT */
-.container{display:grid;grid-template-columns:290px 1fr;min-height:calc(100vh - 57px);}
+.container{display:grid;grid-template-columns:300px 1fr;min-height:calc(100vh - 57px);}
 .sidebar{background:var(--bg-card);border-right:1px solid var(--borda);padding:18px 14px;overflow-y:auto;max-height:calc(100vh - 57px);position:sticky;top:57px;}
 .main{padding:22px 24px;overflow-y:auto;}
 
-/* SIDEBAR */
-.sidebar-title{font-size:11px;font-weight:600;color:var(--texto-mutado);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;padding:0 4px;}
+/* SIDEBAR & GERENCIADOR */
+.sidebar-header-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+.sidebar-title{font-size:11px;font-weight:600;color:var(--texto-mutado);text-transform:uppercase;letter-spacing:.08em;}
+.btn-novo-ex {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--cor-primaria);
+  border: 1px dashed var(--cor-primaria);
+  padding: 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.15s;
+}
+.btn-novo-ex:hover {
+  background: var(--cor-primaria);
+  color: #000;
+  border-style: solid;
+}
+.form-novo-ex {
+  background: var(--bg-principal);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.form-novo-ex input, .form-novo-ex select {
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
 .muscle-group{margin-bottom:4px;}
 .muscle-btn{width:100%;background:transparent;border:none;border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;transition:background .15s;color:var(--texto-claro);}
 .muscle-btn:hover{background:var(--bg-principal);}
-.muscle-btn.active{background:rgba(16, 185, 129, 0.1);color:var(--cor-primaria);border: 1px solid rgba(16, 185, 129, 0.2);}
+.muscle-btn.active{background:rgba(16, 185, 129, 0.05);color:var(--cor-primaria);border: 1px solid rgba(16, 185, 129, 0.15);}
 .muscle-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .muscle-name{font-size:13px;font-weight:500;}
 .muscle-count{margin-left:auto;font-size:11px;color:var(--texto-claro);background:var(--cor-primaria);padding:2px 7px;border-radius:20px;font-weight: 600;}
@@ -55,42 +94,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 .ex-name{font-size:13px;font-weight:500;color:var(--texto-claro);}
 .ex-tags{display:flex;gap:4px;margin-top:3px;flex-wrap:wrap;}
 .ex-tag{font-size:10px;padding:1px 6px;border-radius:4px;background:var(--bg-card);color:var(--texto-mutado);font-weight:500;border: 1px solid var(--borda);}
+
+.ex-actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 .ex-add-btn{width:26px;height:26px;border-radius:6px;background:transparent;border:1px solid var(--cor-primaria);color:var(--cor-primaria);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;line-height:1;}
 .ex-add-btn:hover{background:var(--cor-primaria);color:#000;}
-
-/* NOVO: Formulário de criação rápido na barra lateral */
-.quick-add-form {
-  display: flex;
-  gap: 6px;
-  padding: 10px 8px;
-  border-top: 1px dashed var(--borda);
-  background: rgba(255,255,255,0.02);
-}
-.quick-add-input {
-  flex: 1;
-  background: var(--bg-card);
-  border: 1px solid var(--borda);
+.ex-del-btn {
+  width: 26px;
+  height: 26px;
   border-radius: 6px;
-  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--texto-mutado);
   font-size: 12px;
-  color: var(--texto-claro);
-  outline: none;
-}
-.quick-add-input:focus {
-  border-color: var(--cor-primaria);
-}
-.quick-add-btn {
-  background: var(--cor-primaria);
-  color: #000;
-  border: none;
-  border-radius: 6px;
-  padding: 0 10px;
-  font-size: 12px;
-  font-weight: 600;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
 }
-.quick-add-btn:hover {
-  background: var(--cor-primaria-hover);
+.ex-del-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: var(--cor-perigo);
 }
 
 /* FICHA */
@@ -138,7 +167,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 .summary-pill{background:var(--bg-card);border:1px solid var(--borda);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--texto-mutado);display:flex;align-items:center;gap:6px;}
 .summary-pill strong{color:var(--cor-primaria);font-size:14px;}
 
-/* BUTTONS */
+/* BUTTONS / INPUT GENERIC */
+input, select {
+  background: var(--bg-input);
+  border: 1px solid var(--borda);
+  color: var(--texto-claro);
+  border-radius: 6px;
+  outline: none;
+  font-family: inherit;
+}
+input:focus, select:focus { border-color: var(--cor-primaria); }
+
 .btn{padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;border:none;}
 .btn-primary{background:var(--cor-primaria);color:#000;}
 .btn-primary:hover{background:var(--cor-primaria-hover);}
@@ -153,7 +192,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 /* MOBILE */
 @media (max-width: 680px) {
   .container{grid-template-columns:1fr;grid-template-rows:auto 1fr;}
-  .sidebar{position:fixed;left:0;bottom:0;top:auto;width:100%;max-height:55vh;border-right:none;border-top:1px solid var(--borda);z-index:90;display:none;border-radius:16px 16px 0 0;}
+  .sidebar{position:fixed;left:0;bottom:0;top:auto;width:100%;max-height:65vh;border-right:none;border-top:1px solid var(--borda);z-index:90;display:none;border-radius:16px 16px 0 0;}
   .sidebar.open{display:block;}
   .main{padding:16px;}
   .ficha-ex-card{grid-template-columns:1fr auto auto;grid-template-rows:auto auto;gap:8px;}
@@ -201,7 +240,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 
 <div class="container">
   <div class="sidebar" id="sidebar">
-    <div class="sidebar-title">Exercícios por grupo</div>
+    <div class="sidebar-header-actions">
+      <div class="sidebar-title">Exercícios por grupo</div>
+      <button class="btn-novo-ex" onclick="toggleFormExercicio()">＋ Novo Exercício</button>
+    </div>
+
+    <div class="form-novo-ex" id="formNovoEx" style="display: none;">
+      <input type="text" id="novoExNome" placeholder="Nome do exercício..." autocomplete="off">
+      <select id="novoExGrupo"></select>
+      <button class="btn btn-primary" style="padding: 5px; font-size: 11px; width: 100%; justify-content: center;" onclick="salvarNovoExercicio()">Adicionar</button>
+    </div>
+
     <div id="muscleGroups"></div>
   </div>
 
@@ -239,8 +288,8 @@ const MUSCLE_COLORS = {
   'Glúteo':'#f87171','Panturrilha':'#22d3ee','Abdômen':'#fbbf24','Cardio':'#818cf8'
 };
 
-// Deixamos a lista EXERCISES como um let para podermos adicionar itens em tempo de execução
-let EXERCISES = {
+// Banco de dados inicial padrão
+const EXERCICIOS_PADRAO = {
   'Peito':[
     {name:'Supino com halteres',tags:['compound','push']},
     {name:'Crucifixo no banco',tags:['isolação','chest']},
@@ -330,42 +379,22 @@ let state = {
   fichaName:'',
   activeDay:0,
   openGroup:null,
-  days:DAYS.map(d=>({name:d,exercises:[],notes:''}))
+  days:DAYS.map(d=>({name:d,exercises:[],notes:''})),
+  customExercises: JSON.parse(JSON.stringify(EXERCICIOS_PADRAO)) // Cópia mutável para o usuário alterar
 };
 
-// Tenta carregar o estado da ficha e os exercícios customizados do LocalStorage se existirem
+// Recupera dados salvos
 try {
-  const s = localStorage.getItem('fichafit_v2');
-  if(s) state = JSON.parse(s);
-  
-  const customExs = localStorage.getItem('fichafit_custom_exercises');
-  if(customExs) {
-    const parsed = JSON.parse(customExs);
-    Object.keys(parsed).forEach(group => {
-      if(EXERCISES[group]) {
-        // Unifica a lista padrão com os itens customizados criados pelo usuário
-        parsed[group].forEach(cust => {
-          if(!EXERCISES[group].some(e => e.name === cust.name)) {
-            EXERCISES[group].push(cust);
-          }
-        });
-      }
-    });
+  const s = localStorage.getItem('fichafit_v3');
+  if(s) {
+    const parsed = JSON.parse(s);
+    // Garante compatibilidade caso o usuário não tivesse a lista customizada salva ainda
+    if(!parsed.customExercises) parsed.customExercises = JSON.parse(JSON.stringify(EXERCICIOS_PADRAO));
+    state = parsed;
   }
 } catch(e){}
 
-function persist(){
-  try{
-    localStorage.setItem('fichafit_v2',JSON.stringify(state));
-  }catch(e){}
-}
-
-// Salva apenas os exercícios criados pelo usuário para que não sumam ao atualizar a página
-function persistCustomExercises() {
-  try {
-    localStorage.setItem('fichafit_custom_exercises', JSON.stringify(EXERCISES));
-  } catch(e){}
-}
+function persist(){try{localStorage.setItem('fichafit_v3',JSON.stringify(state));}catch(e){}}
 
 function showToast(msg){
   const t=document.getElementById('toast');
@@ -378,10 +407,66 @@ function flushNotes(){
   if(n)state.days[state.activeDay].notes=n.value;
 }
 
+// ---- POPULAR SELECT DE GRUPOS ----
+function popularSelectGrupos() {
+  const select = document.getElementById('novoExGrupo');
+  select.innerHTML = Object.keys(state.customExercises).map(g => `<option value="${g}">${g}</option>`).join('');
+}
+
+// ---- INTERFACE DO FORMULÁRIO DE EXERCÍCIOS ----
+function toggleFormExercicio() {
+  const form = document.getElementById('formNovoEx');
+  form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+}
+
+function salvarNovoExercicio() {
+  const nomeInput = document.getElementById('novoExNome');
+  const grupoSelect = document.getElementById('novoExGrupo');
+  
+  const nome = nomeInput.value.trim();
+  const grupo = grupoSelect.value;
+
+  if(!nome) {
+    alert('Por favor, digite o nome do exercício.');
+    return;
+  }
+
+  // Verifica duplicatas no grupo
+  const existe = state.customExercises[grupo].some(e => e.name.toLowerCase() === nome.toLowerCase());
+  if(existe) {
+    alert('Esse exercício já existe neste grupo muscular!');
+    return;
+  }
+
+  // Adiciona ao banco customizado
+  state.customExercises[grupo].push({
+    name: nome,
+    tags: ['customizado']
+  });
+
+  nomeInput.value = '';
+  toggleFormExercicio();
+  persist();
+  renderSidebar();
+  showToast(`💪 ${nome} criado em ${grupo}!`);
+}
+
+function excluirExercicioDoGrupo(grupo, idx, event) {
+  event.stopPropagation(); // Evita adicionar o exercício ao clicar no botão de apagar
+  
+  const exNome = state.customExercises[grupo][idx].name;
+  if(!confirm(`Deseja mesmo remover permanentemente o exercício "${exNome}" do grupo ${grupo}?`)) return;
+
+  state.customExercises[grupo].splice(idx, 1);
+  persist();
+  renderSidebar();
+  showToast(`🗑️ Exercício removido do grupo.`);
+}
+
 // ---- RENDER SIDEBAR ----
 function renderSidebar(){
   const el=document.getElementById('muscleGroups');
-  el.innerHTML=Object.entries(EXERCISES).map(([group,exs])=>{
+  el.innerHTML=Object.entries(state.customExercises).map(([group,exs])=>{
     const color=MUSCLE_COLORS[group]||'#9B92BC';
     const isOpen=state.openGroup===group;
     const count=state.days[state.activeDay].exercises.filter(e=>e.group===group).length;
@@ -391,59 +476,21 @@ function renderSidebar(){
         <span class="muscle-name">${group}</span>
         ${count>0?`<span class="muscle-count">${count}</span>`:''}
       </button>
-      ${isOpen?`<div class="ex-panel">
-        <div class="ex-list">
-          ${exs.map((ex,i)=>`<div class="ex-item" onclick="addExercise('${group}',${i})">
-            <div class="ex-info">
-              <div class="ex-name">${ex.name}</div>
-              <div class="ex-tags">${ex.tags.map(t=>`<span class="ex-tag">${t}</span>`).join('')}</div>
-            </div>
+      ${isOpen?`<div class="ex-panel"><div class="ex-list">
+        ${exs.length === 0 ? '<div style="font-size:11px; color:var(--texto-mutado); padding:8px 10px;">Nenhum exercício neste grupo.</div>' : ''}
+        ${exs.map((ex,i)=>`<div class="ex-item" onclick="addExercise('${group}',${i})">
+          <div class="ex-info">
+            <div class="ex-name">${ex.name}</div>
+            <div class="ex-tags">${ex.tags.map(t=>`<span class="ex-tag">${t}</span>`).join('')}</div>
+          </div>
+          <div class="ex-actions-cell">
+            <button class="ex-del-btn" onclick="excluirExercicioDoGrupo('${group}',${i}, event)" title="Excluir do grupo">🗑️</button>
             <button class="ex-add-btn" onclick="event.stopPropagation();addExercise('${group}',${i})">+</button>
-          </div>`).join('')}
-        </div>
-        <div class="quick-add-form" onclick="event.stopPropagation();">
-          <input type="text" class="quick-add-input" id="newExInput_${group}" placeholder="Criar exercício..." 
-            onkeypress="handleQuickAddKeypress(event, '${group}')"/>
-          <button class="quick-add-btn" onclick="createNewExercise('${group}')">Criar</button>
-        </div>
-      </div>`:''}
+          </div>
+        </div>`).join('')}
+      </div></div>`:''}
     </div>`;
   }).join('');
-}
-
-// ---- INTERAÇÕES DE CRIAÇÃO ----
-function createNewExercise(group) {
-  const input = document.getElementById(`newExInput_${group}`);
-  if (!input) return;
-  const name = input.value.trim();
-  
-  if (!name) {
-    showToast('Digite um nome válido!');
-    return;
-  }
-
-  // Verifica se já não existe um exercício com o mesmo nome
-  if (EXERCISES[group].some(e => e.name.toLowerCase() === name.toLowerCase())) {
-    showToast('Este exercício já existe!');
-    return;
-  }
-
-  // Insere na lista local na memória
-  EXERCISES[group].push({
-    name: name,
-    tags: ['customizado']
-  });
-
-  input.value = '';
-  persistCustomExercises();
-  renderSidebar();
-  showToast(`✨ Criado em ${group}: ${name}`);
-}
-
-function handleQuickAddKeypress(e, group) {
-  if (e.key === 'Enter') {
-    createNewExercise(group);
-  }
 }
 
 // ---- RENDER DAY TABS ----
@@ -551,7 +598,7 @@ function switchDay(i){
 }
 
 function addExercise(group,idx){
-  const ex=EXERCISES[group][idx];
+  const ex=state.customExercises[group][idx];
   const day=state.days[state.activeDay];
   if(day.exercises.find(e=>e.name===ex.name&&e.group===group)){
     showToast('Exercício já adicionado!');return;
@@ -639,7 +686,6 @@ function closeMobileSidebar(){
 document.getElementById('fichaName').addEventListener('input',e=>{state.fichaName=e.target.value;});
 document.getElementById('notesArea').addEventListener('input',e=>{state.days[state.activeDay].notes=e.target.value;});
 
-// Close sidebar on outside tap (mobile)
 document.addEventListener('click',e=>{
   const s=document.getElementById('sidebar');
   const btn=document.getElementById('mobileSidebarBtn');
@@ -648,6 +694,8 @@ document.addEventListener('click',e=>{
   }
 });
 
+// Inicialização
+popularSelectGrupos();
 render();
 </script>
 </body>
