@@ -3,392 +3,449 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ficha de Treino App</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Ficha de Treino Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        /* Ajustes finos de estilo baseados no seu default_shadcn_theme.css */
-        body {
-            background-color: #f3f3f5;
-            color: #030213;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        :root {
+            --bg-principal: #0f172a;
+            --bg-card: #1e293b;
+            --cor-primaria: #10b981;
+            --cor-primaria-hover: #059669;
+            --cor-perigo: #ef4444;
+            --cor-perigo-hover: #dc2626;
+            --texto-claro: #f8fafc;
+            --texto-mutado: #94a3b8;
+            --borda: #334155;
         }
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white; }
-            .print-card { border: 1px solid #000; box-shadow: none !important; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-claro);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--borda);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--texto-claro);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-treino {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--borda);
+            color: var(--texto-claro);
+            font-size: 1.5rem;
+            font-weight: 700;
+            width: 200px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-treino:focus {
+            border-color: var(--cor-primaria);
+        }
+
+        /* Formulário de Adicionar Exercício */
+        .form-exercicio {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 12px;
+            margin-bottom: 24px;
+            align-items: end;
+        }
+
+        .grupo-input {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .grupo-input label {
+            font-size: 0.85rem;
+            color: var(--texto-mutado);
+            font-weight: 500;
+        }
+
+        input, select {
+            background: var(--bg-principal);
+            border: 1px solid var(--borda);
+            color: var(--texto-claro);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+            width: 100%;
+        }
+
+        input:focus {
+            border-color: var(--cor-primaria);
+        }
+
+        button {
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-adicionar {
+            background: var(--cor-primaria);
+            color: #000;
+            height: 42px;
+        }
+
+        .btn-adicionar:hover {
+            background: var(--cor-primaria-hover);
+        }
+
+        .btn-pdf {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .btn-pdf:hover {
+            background: #cbd5e1;
+        }
+
+        /* Tabela de Exercícios */
+        .container-tabela {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid var(--borda);
+        }
+
+        th {
+            color: var(--texto-mutado);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            font-size: 0.95rem;
+        }
+
+        .check-concluido {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--cor-primaria);
+            cursor: pointer;
+        }
+
+        .linha-concluida {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        .btn-deletar {
+            background: transparent;
+            color: var(--cor-perigo);
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+        .btn-deletar:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .lista-vazia {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--texto-mutado);
+        }
+
+        /* Responsividade (Smartphones e Tablets) */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 16px;
+            }
+
+            .form-exercicio {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .btn-adicionar {
+                width: 100%;
+                margin-top: 8px;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .btn-pdf {
+                width: 100%;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body>
 
-    <div id="root" class="flex-1 flex flex-col"></div>
+    <div class="container">
+        <header>
+            <h1>💪 <input type="text" id="nomeTreino" class="input-treino" value="Treino A"></h1>
+            <button class="btn-pdf" onclick="exportarPDF()">
+                📥 Exportar PDF
+            </button>
+        </header>
 
-    <script type="text/babel">
-        // Atalhos para as funções do React
-        const { useState, useEffect } = React;
+        <div class="form-exercicio">
+            <div class="grupo-input">
+                <label for="exercicio">Nome do Exercício</label>
+                <input type="text" id="exercicio" placeholder="Ex: Supino Reto" autocomplete="off">
+            </div>
+            <div class="grupo-input">
+                <label for="series">Séries</label>
+                <input type="number" id="series" placeholder="4" min="1">
+            </div>
+            <div class="grupo-input">
+                <label for="repeticoes">Repetições</label>
+                <input type="text" id="repeticoes" placeholder="12 ou 10-12">
+            </div>
+            <button class="btn-adicionar" onclick="adicionarExercicio()">+ Adicionar</button>
+        </div>
 
-        // Componente de Ícone Genérico usando Lucide
-        const Icon = ({ name, className = "w-5 h-5", ...props }) => {
-            const [iconHtml, setIconHtml] = useState('');
+        <div class="container-tabela">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">Check</th>
+                        <th>Exercício</th>
+                        <th style="width: 100px;">Séries</th>
+                        <th style="width: 120px;">Repetições</th>
+                        <th style="width: 60px;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="listaExercicios">
+                    </tbody>
+            </table>
+            <div id="mensagemVazia" class="lista-vazia">
+                Nenhum exercício adicionado ainda. Comece a montar seu treino!
+            </div>
+        </div>
+    </div>
 
-            useEffect(() => {
-                if (window.lucide && window.lucide.icons[name]) {
-                    const svg = window.lucide.createSvg(window.lucide.icons[name], {
-                        class: className,
-                        ...props
-                    });
-                    // O lucide.createSvg retorna um elemento DOMElement, pegamos o outerHTML
-                    const div = document.createElement('div');
-                    div.appendChild(svg);
-                    setIconHtml(div.innerHTML);
-                }
-            }, [name, className]);
+    <script>
+        // Array para armazenar os exercícios em memória
+        let listaTreino = [];
 
-            return <span dangerouslySetInnerHTML={{ __html: iconHtml }} class="inline-block align-middle" />;
-        };
+        const inputExercicio = document.getElementById('exercicio');
+        const inputSeries = document.getElementById('series');
+        const inputRepeticoes = document.getElementById('repeticoes');
+        const tabelaBf = document.getElementById('listaExercicios');
+        const mensagemVazia = document.getElementById('mensagemVazia');
+        const nomeTreinoInput = document.getElementById('nomeTreino');
 
-        // Dados Iniciais de Exemplo
-        const initialWorkouts = [
-            {
-                id: '1',
-                name: 'Treino A - Peito e Tríceps',
-                description: 'Foco em hipertrofia e progressão de carga',
-                exercises: [
-                    { id: 'e1', name: 'Supino Reto com Barra', sets: 4, reps: '10', weight: '30kg cada lado' },
-                    { id: 'e2', name: 'Crucifixo Inclinado com Halteres', sets: 3, reps: '12', weight: '18kg' },
-                    { id: 'e3', name: 'Tríceps Corda na Polia', sets: 4, reps: '12-15', weight: '25kg' }
-                ]
-            },
-            {
-                id: '2',
-                name: 'Treino B - Costas e Bíceps',
-                description: 'Foco em amplitude de movimento',
-                exercises: [
-                    { id: 'e4', name: 'Puxada Alta Pronada', sets: 4, reps: '10', weight: '50kg' },
-                    { id: 'e5', name: 'Remada Curvada com Barra', sets: 3, reps: '12', weight: '20kg cada lado' },
-                    { id: 'e6', name: 'Rosca Direta com Barra W', sets: 4, reps: '10', weight: '12kg cada lado' }
-                ]
-            }
-        ];
-
-        // Componente Principal da Aplicação
-        function App() {
-            const [workouts, setWorkouts] = useState(initialWorkouts);
-            const [activeWorkoutId, setActiveWorkoutId] = useState('1');
-            const [isDarkMode, setIsDarkMode] = useState(false);
-
-            // Estados para novos treinos/exercícios
-            const [newWorkoutName, setNewWorkoutName] = useState('');
-            const [newWorkoutDesc, setNewWorkoutDesc] = useState('');
+        // Função para atualizar a interface da tabela
+        function renderizarTabela() {
+            tabelaBf.innerHTML = '';
             
-            const [newExName, setNewExName] = useState('');
-            const [newExSets, setNewExSets] = useState(3);
-            const [newExReps, setNewExReps] = useState('10');
-            const [newExWeight, setNewExWeight] = useState('');
+            if (listaTreino.length === 0) {
+                mensagemVazia.style.display = 'block';
+                return;
+            } else {
+                mensagemVazia.style.display = 'none';
+            }
 
-            const activeWorkout = workouts.find(w => w.id === activeWorkoutId) || workouts[0];
+            listaTreino.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                if (item.concluido) tr.classList.add('linha-concluida');
 
-            // Alternar tema Dark Mode (Shadcn style)
-            const toggleDarkMode = () => {
-                setIsDarkMode(!isDarkMode);
-                document.documentElement.classList.toggle('dark');
-            };
-
-            // Criar Novo Treino (Ficha)
-            const handleCreateWorkout = (e) => {
-                e.preventDefault();
-                if (!newWorkoutName.trim()) return;
-
-                const newWorkout = {
-                    id: Date.now().toString(),
-                    name: newWorkoutName,
-                    description: newWorkoutDesc,
-                    exercises: []
-                };
-
-                setWorkouts([...workouts, newWorkout]);
-                setActiveWorkoutId(newWorkout.id);
-                setNewWorkoutName('');
-                setNewWorkoutDesc('');
-            };
-
-            // Adicionar Exercício ao Treino Ativo
-            const handleAddExercise = (e) => {
-                e.preventDefault();
-                if (!newExName.trim() || !activeWorkout) return;
-
-                const newExercise = {
-                    id: Date.now().toString(),
-                    name: newExName,
-                    sets: parseInt(newExSets) || 3,
-                    reps: newExReps,
-                    weight: newExWeight || 'Sem carga'
-                };
-
-                const updatedWorkouts = workouts.map(w => {
-                    if (w.id === activeWorkout.id) {
-                        return { ...w, exercises: [...w.exercises, newExercise] };
-                    }
-                    return w;
-                });
-
-                setWorkouts(updatedWorkouts);
-                setNewExName('');
-                setNewExWeight('');
-            };
-
-            // Deletar Exercício
-            const handleDeleteExercise = (exId) => {
-                const updatedWorkouts = workouts.map(w => {
-                    if (w.id === activeWorkout.id) {
-                        return { ...w, exercises: w.exercises.filter(ex => ex.id !== exId) };
-                    }
-                    return w;
-                });
-                setWorkouts(updatedWorkouts);
-            };
-
-            // Deletar Ficha de Treino Inteira
-            const handleDeleteWorkout = (wId) => {
-                if (workouts.length <= 1) {
-                    alert("Você precisa manter pelo menos uma ficha de treino ativa!");
-                    return;
-                }
-                const filtered = workouts.filter(w => w.id !== wId);
-                setWorkouts(filtered);
-                setActiveWorkoutId(filtered[0].id);
-            };
-
-            return (
-                <div class={`min-h-screen flex flex-col ${isDarkMode ? 'bg-[#141414] text-white' : 'bg-[#f3f3f5] text-[#030213]'}`}>
-                    
-                    {/* BARRA DE NAVEGAÇÃO SUPERIOR */}
-                    <header class="no-print border-b border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-6 py-4 flex justify-between items-center shadow-sm">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-[#030213] text-white dark:bg-white dark:text-[#030213] p-2 rounded-xl">
-                                <Icon name="Dumbbell" className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <h1 class="text-xl font-bold tracking-tight">Ficha de Treino</h1>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Monte e organize sua rotina fitness</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-3">
-                            <button 
-                                onClick={toggleDarkMode}
-                                class="p-2 rounded-lg border border-gray-200 dark:border-zinc-700 hover:bg-gray-100 dark:hover:bg-zinc-800 transition"
-                            >
-                                <Icon name={isDarkMode ? "Sun" : "Moon"} className="w-5 h-5" />
-                            </button>
-                            <button 
-                                onClick={() => window.print()}
-                                class="bg-[#030213] text-white dark:bg-white dark:text-[#030213] px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 hover:opacity-90 transition shadow-sm"
-                            >
-                                <Icon name="Printer" className="w-4 h-4" /> Exportar / PDF
-                            </button>
-                        </div>
-                    </header>
-
-                    {/* CONTEÚDO PRINCIPAL */}
-                    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 md:grid-cols-12 gap-6">
-                        
-                        {/* COLUNA ESQUERDA: LISTA DE TREINOS E CADASTROS */}
-                        <section class="no-print md:col-span-4 space-y-6">
-                            
-                            {/* Card: Seletor de Fichas */}
-                            <div class="bg-white dark:bg-zinc-900 rounded-xl p-5 border border-gray-100 dark:border-zinc-800 shadow-sm space-y-4">
-                                <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                                    <Icon name="List" className="w-4 h-4" /> Suas Fichas
-                                </h2>
-                                <div class="space-y-2">
-                                    {workouts.map(w => (
-                                        <div 
-                                            key={w.id}
-                                            onClick={() => setActiveWorkoutId(w.id)}
-                                            class={`w-full p-3.5 rounded-lg flex justify-between items-center cursor-pointer transition border ${
-                                                activeWorkoutId === w.id 
-                                                    ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-600 font-medium' 
-                                                    : 'border-transparent hover:bg-gray-50 dark:hover:bg-zinc-800/50'
-                                            }`}
-                                        >
-                                            <div class="flex flex-col items-start truncate mr-2">
-                                                <span class="truncate">{w.name}</span>
-                                                {w.description && <span class="text-xs text-gray-400 truncate">{w.description}</span>}
-                                            </div>
-                                            <button 
-                                                onClick={(e) => { e.stopPropagation(); handleDeleteWorkout(w.id); }}
-                                                class="text-gray-400 hover:text-red-500 p-1 rounded transition"
-                                                title="Excluir treino"
-                                            >
-                                                <Icon name="Trash2" className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Card: Criar Nova Ficha */}
-                            <div class="bg-white dark:bg-zinc-900 rounded-xl p-5 border border-gray-100 dark:border-zinc-800 shadow-sm">
-                                <h3 class="font-semibold mb-3 flex items-center gap-2 text-sm">
-                                    <Icon name="FolderPlus" className="w-4 h-4" /> Nova Ficha de Treino
-                                </h3>
-                                <form onSubmit={handleCreateWorkout} class="space-y-3">
-                                    <input 
-                                        type="text" 
-                                        placeholder="Ex: Treino C - Pernas" 
-                                        value={newWorkoutName}
-                                        onChange={(e) => setNewWorkoutName(e.target.value)}
-                                        class="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
-                                        required
-                                    />
-                                    <input 
-                                        type="text" 
-                                        placeholder="Foco em quadríceps (Opcional)" 
-                                        value={newWorkoutDesc}
-                                        onChange={(e) => setNewWorkoutDesc(e.target.value)}
-                                        class="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
-                                    />
-                                    <button type="submit" class="w-full bg-[#030213] dark:bg-white dark:text-[#030213] text-white py-2 rounded-lg font-medium text-xs hover:opacity-90 transition">
-                                        Criar Ficha
-                                    </button>
-                                </form>
-                            </div>
-                        </section>
-
-                        {/* COLUNA DIREITA: VISUALIZAÇÃO DOS EXERCÍCIOS DA FICHA ATIVA */}
-                        <section class="col-span-1 md:col-span-8 space-y-6">
-                            
-                            {activeWorkout ? (
-                                <div class="bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 p-6 shadow-sm print-card">
-                                    {/* Cabeçalho do Treino Selecionado */}
-                                    <div class="border-b border-gray-100 dark:border-zinc-800 pb-4 mb-6 flex justify-between items-start">
-                                        <div>
-                                            <h2 class="text-2xl font-bold tracking-tight">{activeWorkout.name}</h2>
-                                            <p class="text-gray-500 dark:text-gray-400 text-sm">{activeWorkout.description || 'Sem descrição cadastrada'}</p>
-                                        </div>
-                                        <span class="text-xs bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 rounded-full font-medium text-gray-600 dark:text-gray-300 print-card">
-                                            {activeWorkout.exercises.length} Exercício(s)
-                                        </span>
-                                    </div>
-
-                                    {/* Formulário no-print interno para adicionar exercícios */}
-                                    <div class="no-print bg-gray-50 dark:bg-zinc-800/40 border border-gray-100 dark:border-zinc-800/80 rounded-xl p-4 mb-6">
-                                        <h3 class="font-medium text-sm mb-3 flex items-center gap-2">
-                                            <Icon name="PlusCircle" className="w-4 h-4" /> Adicionar Exercício à Ficha
-                                        </h3>
-                                        <form onSubmit={handleAddExercise} class="grid grid-cols-1 sm:grid-cols-12 gap-3">
-                                            <div class="sm:col-span-5">
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Nome do Exercício (Ex: Leg Press)" 
-                                                    value={newExName}
-                                                    onChange={(e) => setNewExName(e.target.value)}
-                                                    class="w-full px-3 py-2 rounded-lg bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-sm focus:outline-none"
-                                                    required
-                                                />
-                                            </div>
-                                            <div class="sm:col-span-2">
-                                                <input 
-                                                    type="number" 
-                                                    placeholder="Séries" 
-                                                    value={newExSets}
-                                                    onChange={(e) => setNewExSets(e.target.value)}
-                                                    class="w-full px-3 py-2 rounded-lg bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-sm focus:outline-none"
-                                                    min="1"
-                                                />
-                                            </div>
-                                            <div class="sm:col-span-2">
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Reps (Ex: 12)" 
-                                                    value={newExReps}
-                                                    onChange={(e) => setNewExReps(e.target.value)}
-                                                    class="w-full px-3 py-2 rounded-lg bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-sm focus:outline-none"
-                                                />
-                                            </div>
-                                            <div class="sm:col-span-3">
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Carga (Ex: 100kg)" 
-                                                    value={newExWeight}
-                                                    onChange={(e) => setNewExWeight(e.target.value)}
-                                                    class="w-full px-3 py-2 rounded-lg bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-sm focus:outline-none"
-                                                />
-                                            </div>
-                                            <div class="col-span-1 sm:col-span-12 flex justify-end">
-                                                <button type="submit" class="bg-[#030213] dark:bg-white dark:text-[#030213] text-white px-4 py-2 rounded-lg font-medium text-xs hover:opacity-90 transition flex items-center gap-1.5">
-                                                    <Icon name="Plus" className="w-3.5 h-3.5" /> Adicionar
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    {/* TABELA DE EXERCÍCIOS */}
-                                    {activeWorkout.exercises.length === 0 ? (
-                                        <div class="text-center py-12 border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-xl">
-                                            <Icon name="Dumbbell" className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                                            <p class="text-sm text-gray-500 dark:text-gray-400">Nenhum exercício adicionado a esta ficha ainda.</p>
-                                        </div>
-                                    ) : (
-                                        <div class="overflow-x-auto">
-                                            <table class="w-full text-left border-collapse">
-                                                <thead>
-                                                    <tr class="border-b border-gray-200 dark:border-zinc-800 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                                                        <th class="py-3 px-2">Exercício</th>
-                                                        <th class="py-3 px-2 text-center">Séries</th>
-                                                        <th class="py-3 px-2 text-center">Repetições</th>
-                                                        <th class="py-3 px-2">Carga</th>
-                                                        <th class="py-3 px-2 text-right no-print"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="divide-y divide-gray-100 dark:divide-zinc-800/60 text-sm">
-                                                    {activeWorkout.exercises.map(ex => (
-                                                        <tr key={ex.id} class="hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition">
-                                                            <td class="py-3.5 px-2 font-medium">{ex.name}</td>
-                                                            <td class="py-3.5 px-2 text-center font-mono">{ex.sets}</td>
-                                                            <td class="py-3.5 px-2 text-center font-mono">{ex.reps}</td>
-                                                            <td class="py-3.5 px-2 text-gray-600 dark:text-gray-300 font-medium">{ex.weight}</td>
-                                                            <td class="py-3.5 px-2 text-right no-print">
-                                                                <button 
-                                                                    onClick={() => handleDeleteExercise(ex.id)}
-                                                                    class="text-gray-400 hover:text-red-500 p-1 rounded transition"
-                                                                >
-                                                                    <Icon name="X" className="w-4 h-4" />
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    )}
-
-                                </div>
-                            ) : (
-                                <div class="text-center py-12 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl">
-                                    <p class="text-sm text-gray-500">Selecione ou crie um treino na barra lateral.</p>
-                                </div>
-                            )}
-
-                        </section>
-                    </main>
-
-                    {/* RODAPÉ */}
-                    <footer class="no-print mt-auto border-t border-gray-200 dark:border-zinc-800 py-4 text-center text-xs text-gray-400 bg-white dark:bg-zinc-900">
-                        Ficha de Treino App — Baseado em componentes shadcn/ui e design Figma Make.
-                    </footer>
-                </div>
-            );
+                tr.innerHTML = `
+                    <td>
+                        <input type="checkbox" class="check-concluido" ${item.concluido ? 'checked' : ''} onchange="alternarConcluido(${index})">
+                    </td>
+                    <td><strong>${item.nome}</strong></td>
+                    <td>${item.series}</td>
+                    <td>${item.repeticoes}</td>
+                    <td>
+                        <button class="btn-deletar" onclick="removerExercicio(${index})" title="Remover">🗑️</button>
+                    </td>
+                `;
+                tabelaBf.appendChild(tr);
+            });
         }
 
-        // Renderização no elemento #root
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        // Adiciona um novo exercício à lista
+        function adicionarExercicio() {
+            const nome = inputExercicio.value.trim();
+            const series = inputSeries.value.trim();
+            const repeticoes = inputRepeticoes.value.trim();
+
+            if (!nome || !series || !repeticoes) {
+                alert('Por favor, preencha todos os campos do exercício.');
+                return;
+            }
+
+            listaTreino.push({
+                nome: nome,
+                series: series,
+                repeticoes: repeticoes,
+                concluido: false
+            });
+
+            // Limpa os campos após inserção
+            inputExercicio.value = '';
+            inputSeries.value = '';
+            inputRepeticoes.value = '';
+            inputExercicio.focus();
+
+            renderizarTabela();
+        }
+
+        // Marca ou desmarca o exercício como feito (Acompanhamento Diário)
+        function alternarConcluido(index) {
+            listaTreino[index].concluido = !listaTreino[index].concluido;
+            renderizarTabela();
+        }
+
+        // Remove o exercício
+        function removerExercicio(index) {
+            listaTreino.splice(index, 1);
+            renderizarTabela();
+        }
+
+        // Exportação do Treino Formatado em PDF
+        function exportarPDF() {
+            if (listaTreino.length === 0) {
+                alert('Adicione pelo menos um exercício antes de exportar!');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const tituloTreino = nomeTreinoInput.value.toUpperCase();
+
+            // Configuração estética do PDF
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(22);
+            doc.textColor(15, 23, 42); // Cor escura estruturada
+            doc.text(`FICHA DE TREINO: ${tituloTreino}`, 14, 25);
+
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.textColor(100, 116, 139);
+            const dataAtual = new Date().toLocaleDateString('pt-BR');
+            doc.text(`Gerado em: ${dataAtual} | Acompanhamento de Performance`, 14, 32);
+
+            // Linha divisória
+            doc.setDrawColor(203, 213, 225);
+            doc.line(14, 36, 196, 36);
+
+            // Cabeçalho da Tabela no PDF
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.textColor(51, 65, 85);
+            doc.text("Status", 14, 46);
+            doc.text("Exercício", 40, 46);
+            doc.text("Séries", 135, 46);
+            doc.text("Repetições", 165, 46);
+
+            doc.line(14, 50, 196, 50);
+
+            // Listagem dos itens
+            doc.setFont("helvetica", "normal");
+            let linhaY = 58;
+
+            listaTreino.forEach((item) => {
+                // Quebra de página automática se o treino for muito longo
+                if (linhaY > 275) {
+                    doc.addPage();
+                    linhaY = 25;
+                }
+
+                // Status em formato de texto para conferência posterior
+                const statusText = item.concluido ? "[ X ]" : "[   ]";
+                doc.setFont("monospace", "normal");
+                doc.text(statusText, 15, linhaY);
+                
+                doc.setFont("helvetica", "normal");
+                doc.text(item.nome, 40, linhaY);
+                doc.text(String(item.series), 140, linhaY);
+                doc.text(String(item.repeticoes), 170, linhaY);
+
+                // Linha fina separadora de exercícios
+                doc.setDrawColor(241, 245, 249);
+                doc.line(14, linhaY + 4, 196, linhaY + 4);
+
+                linhaY += 10;
+            });
+
+            // Salva o arquivo final
+            doc.save(`ficha_de_treino_${tituloTreino.toLowerCase().replace(/\s+/g, '_')}.pdf`);
+        }
+
+        // Permite adicionar o exercício ao apertar 'Enter' nos campos
+        [inputExercicio, inputSeries, inputRepeticoes].forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    adicionarExercicio();
+                }
+            });
+        });
     </script>
 </body>
 </html>
