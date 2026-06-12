@@ -1,719 +1,301 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="theme-color" content="#0f172a"/>
-<title>FichaFit – Sistema de Treinos</title>
-<style>
-:root {
-  --bg-principal: #0f172a;       
-  --bg-card: #1e293b;            
-  --bg-input: #0f172a;           
-  --cor-primaria: #10b981;       
-  --cor-primaria-hover: #059669; 
-  --cor-perigo: #ef4444;         
-  --texto-claro: #f8fafc;        
-  --texto-mutado: #94a3b8;       
-  --borda: #334155;              
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gerenciamento Escolar</title>
+  <style>
+    :root {
+      --primary: #2D1B69;
+      --secondary: #4A2D8F;
+      --accent: #C9A84C;
+      --light: #FAF7FF;
+      --dark: #1A1A1A;
+      --danger: #dc3545;
+      --success: #28a745;
+    }
 
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;background:var(--bg-principal);color:var(--texto-claro);min-height:100vh;}
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--light); color: var(--dark); display: flex; flex-direction: column; min-height: 100vh; }
 
-/* TELA DE LOGIN */
-.login-screen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 20px;
-}
-.login-box {
-  background: var(--bg-card);
-  border: 1px solid var(--borda);
-  border-radius: 12px;
-  padding: 32px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
-}
-.login-title {
-  font-size: 20px;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 24px;
-}
-.login-title span { color: var(--cor-primaria); }
-.form-group {
-  margin-bottom: 16px;
-}
-.form-group label {
-  display: block;
-  font-size: 12px;
-  color: var(--texto-mutado);
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.form-group input {
-  width: 100%;
-  padding: 10px 14px;
-  font-size: 14px;
-}
-.btn-login {
-  width: 100%;
-  padding: 12px;
-  font-size: 14px;
-  justify-content: center;
-  margin-top: 10px;
-}
-.login-hint {
-  font-size: 11px;
-  color: var(--texto-mutado);
-  margin-top: 20px;
-  line-height: 1.5;
-  background: rgba(255,255,255,0.02);
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px dashed var(--borda);
-}
+    /* Topbar */
+    header { background-color: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .user-info { display: flex; align-items: center; gap: 15px; }
+    select, button, input { padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; }
+    button { background-color: var(--accent); color: var(--primary); font-weight: bold; cursor: pointer; border: none; transition: 0.2s; }
+    button:hover { opacity: 0.9; }
+    button.btn-danger { background-color: var(--danger); color: white; }
 
-/* APP CONTENT (Escondido por padrão antes do login) */
-.app-content { display: none; }
+    /* Layout Principal */
+    .container { display: flex; flex: 1; }
+    
+    /* Menu Lateral */
+    nav { background-color: white; width: 250px; border-right: 1px solid #e0e0e0; padding: 20px 10px; display: flex; flex-direction: column; gap: 10px; }
+    nav button { background-color: transparent; color: var(--primary); text-align: left; padding: 12px; border-radius: 8px; width: 100%; font-weight: 500; }
+    nav button:hover, nav button.active { background-color: var(--primary); color: white; }
 
-/* HEADER */
-.header{background:var(--bg-card);border-bottom:1px solid var(--borda);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.logo{display:flex;align-items:center;gap:10px;}
-.logo-icon{width:32px;height:32px;background:linear-gradient(135deg, var(--cor-primaria), #34d399);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
-.logo-text{font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--texto-claro);}
-.logo-text span{color:var(--cor-primaria);}
-.user-badge {
-  font-size: 11px;
-  background: var(--bg-principal);
-  padding: 4px 10px;
-  border-radius: 20px;
-  border: 1px solid var(--borda);
-  color: var(--cor-primaria);
-  font-weight: 600;
-  text-transform: uppercase;
-}
-.header-actions{display:flex;gap:8px;align-items: center;}
+    /* Área de Conteúdo */
+    main { flex: 1; padding: 30px; }
+    .view-section { display: none; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .view-section.active { display: block; }
 
-/* LAYOUT */
-.container{display:grid;grid-template-columns:300px 1fr;min-height:calc(100vh - 57px);}
-.sidebar{background:var(--bg-card);border-right:1px solid var(--borda);padding:18px 14px;overflow-y:auto;max-height:calc(100vh - 57px);position:sticky;top:57px;}
-.main{padding:22px 24px;overflow-y:auto;}
-
-/* SIDEBAR & GERENCIADOR */
-.sidebar-header-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 16px;
-  padding: 0 4px;
-}
-.sidebar-title{font-size:11px;font-weight:600;color:var(--texto-mutado);text-transform:uppercase;letter-spacing:.08em;}
-.btn-novo-ex {
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--cor-primaria);
-  border: 1px dashed var(--cor-primaria);
-  padding: 8px;
-  font-size: 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  text-align: center;
-  transition: all 0.15s;
-}
-.btn-novo-ex:hover {
-  background: var(--cor-primaria);
-  color: #000;
-  border-style: solid;
-}
-.form-novo-ex {
-  background: var(--bg-principal);
-  border: 1px solid var(--borda);
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.form-novo-ex input, .form-novo-ex select {
-  padding: 6px 8px;
-  font-size: 12px;
-}
-
-.muscle-group{margin-bottom:4px;}
-.muscle-btn{width:100%;background:transparent;border:none;border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;transition:background .15s;color:var(--texto-claro);}
-.muscle-btn:hover{background:var(--bg-principal);}
-.muscle-btn.active{background:rgba(16, 185, 129, 0.05);color:var(--cor-primaria);border: 1px solid rgba(16, 185, 129, 0.15);}
-.muscle-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.muscle-name{font-size:13px;font-weight:500;}
-.muscle-count{margin-left:auto;font-size:11px;color:var(--texto-claro);background:var(--cor-primaria);padding:2px 7px;border-radius:20px;font-weight: 600;}
-.muscle-btn.active .muscle-count{background:var(--cor-primaria);color:#000;}
-
-.ex-panel{background:var(--bg-principal);border-radius:0 0 8px 8px;margin:0 0 4px;border: 1px solid var(--borda);border-top: none;}
-.ex-list{padding:6px 8px 10px;}
-.ex-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .12s;gap:8px;}
-.ex-item:hover{background:var(--bg-card);}
-.ex-info{flex:1;}
-.ex-name{font-size:13px;font-weight:500;color:var(--texto-claro);}
-.ex-tags{display:flex;gap:4px;margin-top:3px;flex-wrap:wrap;}
-.ex-tag{font-size:10px;padding:1px 6px;border-radius:4px;background:var(--bg-card);color:var(--texto-mutado);font-weight:500;border: 1px solid var(--borda);}
-
-.ex-actions-cell {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.ex-add-btn{width:26px;height:26px;border-radius:6px;background:transparent;border:1px solid var(--cor-primaria);color:var(--cor-primaria);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;line-height:1;}
-.ex-add-btn:hover{background:var(--cor-primaria);color:#000;}
-.ex-del-btn {
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--texto-mutado);
-  font-size: 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s;
-}
-.ex-del-btn:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.2);
-  color: var(--cor-perigo);
-}
-
-/* FICHA */
-.ficha-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;}
-.ficha-title-block{flex:1;}
-.ficha-label{font-size:11px;font-weight:600;color:var(--texto-mutado);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
-.ficha-name-input{background:var(--bg-card);border:1px solid var(--borda);border-radius:10px;padding:10px 14px;font-size:16px;font-weight:600;color:var(--texto-claro);font-family:inherit;width:100%;outline:none;transition:border .15s;}
-.ficha-name-input:focus{border-color:var(--cor-primaria);}
-.ficha-name-input::placeholder{color:var(--texto-mutado);}
-
-.day-tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
-.day-tab{padding:7px 14px;border-radius:8px;border:1px solid var(--borda);background:transparent;color:var(--texto-mutado);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s;}
-.day-tab:hover{border-color:var(--cor-primaria);color:var(--texto-claro);}
-.day-tab.active{background:var(--cor-primaria);border-color:var(--cor-primaria);color:#000;font-weight: 600;}
-
-/* EMPTY STATE */
-.ficha-empty{text-align:center;padding:48px 24px;color:var(--texto-mutado);}
-.ficha-empty-icon{font-size:44px;margin-bottom:12px;}
-.ficha-empty-text{font-size:14px;line-height:1.6;color:var(--texto-claro);}
-
-/* EXERCISE CARDS */
-.ficha-group{margin-bottom:20px;}
-.ficha-group-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
-.ficha-group-dot{width:8px;height:8px;border-radius:50%;}
-.ficha-group-name{font-size:12px;font-weight:600;color:var(--texto-claro);text-transform:uppercase;letter-spacing:.07em;}
-.ficha-ex-card{background:var(--bg-card);border:1px solid var(--borda);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:grid;grid-template-columns:auto 1fr auto auto auto auto;align-items:center;gap:10px;}
-.ficha-ex-name{font-size:13px;font-weight:500;color:var(--texto-claro);}
-.ficha-ex-muscle{font-size:11px;color:var(--texto-mutado);margin-top:2px;}
-.set-input-group{display:flex;flex-direction:column;align-items:center;gap:3px;}
-.set-label{font-size:10px;color:var(--texto-mutado);font-weight:500;white-space:nowrap;}
-.set-input{width:58px;background:var(--bg-principal);border:1px solid var(--borda);border-radius:6px;padding:5px 6px;font-size:12px;font-weight:600;color:var(--texto-claro);font-family:inherit;text-align:center;outline:none;transition:border .15s;}
-.set-input:focus{border-color:var(--cor-primaria);}
-.set-input:disabled{opacity: 0.8; color: var(--texto-claro); background: transparent; border-color: transparent;}
-.ficha-ex-remove{width:28px;height:28px;border-radius:6px;background:transparent;border:1px solid transparent;color:var(--texto-mutado);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
-.ficha-ex-remove:hover{background:rgba(239, 68, 68, 0.1);border-color:rgba(239, 68, 68, 0.2);color:var(--cor-perigo);}
-
-/* DIARIO CHECKBOX */
-.check-diario {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--cor-primaria);
-  cursor: pointer;
-}
-.row-concluida {
-  opacity: 0.4;
-}
-
-/* NOTES */
-.section-label{font-size:11px;font-weight:600;color:var(--texto-mutado);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;margin-top:16px;}
-.notes-area{background:var(--bg-card);border:1px solid var(--borda);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--texto-claro);font-family:inherit;width:100%;resize:vertical;min-height:80px;outline:none;transition:border .15s;}
-.notes-area:focus{border-color:var(--cor-primaria);}
-.notes-area::placeholder{color:var(--texto-mutado);}
-
-/* SUMMARY */
-.summary-bar{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
-.summary-pill{background:var(--bg-card);border:1px solid var(--borda);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--texto-mutado);display:flex;align-items:center;gap:6px;}
-.summary-pill strong{color:var(--cor-primaria);font-size:14px;}
-
-/* BUTTONS / INPUT GENERIC */
-input, select {
-  background: var(--bg-input);
-  border: 1px solid var(--borda);
-  color: var(--texto-claro);
-  border-radius: 6px;
-  outline: none;
-  font-family: inherit;
-}
-input:focus, select:focus { border-color: var(--cor-primaria); }
-
-.btn{padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;border:none;}
-.btn-primary{background:var(--cor-primaria);color:#000;}
-.btn-primary:hover{background:var(--cor-primaria-hover);}
-.btn-ghost{background:transparent;border:1px solid var(--borda);color:var(--texto-claro);}
-.btn-ghost:hover{border-color:var(--cor-primaria);background:rgba(16, 185, 129, 0.05);}
-.bottom-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
-
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--bg-card);border:1px solid var(--cor-primaria);color:var(--cor-primaria);padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;}
-.toast.show{opacity:1;transform:translateY(0);}
-
-/* MOBILE */
-@media (max-width: 680px) {
-  .container{grid-template-columns:1fr;grid-template-rows:auto 1fr;}
-  .sidebar{position:fixed;left:0;bottom:0;top:auto;width:100%;max-height:65vh;border-right:none;border-top:1px solid var(--borda);z-index:90;display:none;border-radius:16px 16px 0 0;}
-  .sidebar.open{display:block;}
-  .main{padding:16px;}
-  .ficha-ex-card{grid-template-columns:auto 1fr auto;grid-template-rows:auto auto;gap:8px;}
-  .ficha-ex-card > div:nth-child(2){grid-column:2/4;}
-  .mobile-sidebar-btn{display:flex!important;}
-  .header-actions .btn span{display:none;}
-}
-.mobile-sidebar-btn{display:none;position:fixed;bottom:24px;left:24px;z-index:80;width:52px;height:52px;border-radius:50%;background:var(--cor-primaria);border:none;color:#000;font-size:22px;cursor:pointer;box-shadow:0 4px 20px rgba(16,185,129,.3);align-items:center;justify-content:center;}
-</style>
+    h2 { color: var(--primary); margin-bottom: 20px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; }
+    .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+    
+    /* Tabelas e Listas */
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background-color: #f4f4f4; color: var(--primary); }
+    
+    /* Restrição Visual (Caso falte JS) */
+    .admin-only, .professor-only, .no-aluno { display: none; }
+  </style>
 </head>
 <body>
 
-<!-- TELA DE LOGIN -->
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <div class="login-title">💪 Ficha<span>Fit</span> Login</div>
-    <div class="form-group">
-      <label>Usuário</label>
-      <input type="text" id="username" placeholder="Digite seu usuário">
+  <header>
+    <h1>Portal Acadêmico</h1>
+    <div class="user-info">
+      <label for="login-as"><strong>Simular Login como:</strong></label>
+      <select id="login-as" onchange="changeRole(this.value)">
+        <option value="admin">Administrador</option>
+        <option value="professor">Professor</option>
+        <option value="aluno">Aluno</option>
+      </select>
+      <span id="current-badge" style="background: var(--accent); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 12px;">ADMIN</span>
     </div>
-    <div class="form-group">
-      <label>Senha</label>
-      <input type="password" id="password" placeholder="Digite sua senha">
-    </div>
-    <button class="btn btn-primary btn-login" onclick="executarLogin()">Entrar no Sistema</button>
-    <div class="login-hint">
-      <strong>Credenciais de teste:</strong><br>
-      • Admin: admin / 123<br>
-      • Professor: professor / 123<br>
-      • Aluno: aluno / 123
-    </div>
-  </div>
-</div>
-
-<!-- CONTEÚDO PRINCIPAL DO APLICATIVO -->
-<div class="app-content" id="appContent">
-  <div class="header">
-    <div class="logo">
-      <div class="logo-icon">💪</div>
-      <div class="logo-text">Ficha<span>Fit</span></div>
-      <span class="user-badge" id="roleBadge">Nível</span>
-    </div>
-    <div class="header-actions">
-      <button class="btn btn-ghost" onclick="printFicha()">🖨️ <span>Imprimir / PDF</span></button>
-      <button class="btn btn-ghost de-admin" onclick="exportJSON()">📤 <span>Exportar</span></button>
-      <button class="btn btn-primary de-edicao" onclick="saveFicha()">💾 <span>Salvar</span></button>
-      <button class="btn btn-ghost" style="border-color: var(--cor-perigo); color: var(--cor-perigo)" onclick="executarLogout()">🚪 <span>Sair</span></button>
-    </div>
-  </div>
+  </header>
 
   <div class="container">
-    <div class="sidebar" id="sidebar">
-      <div class="sidebar-header-actions">
-        <div class="sidebar-title">Exercícios por grupo</div>
-        <button class="btn-novo-ex de-admin" id="btnShowNovoEx" onclick="toggleFormExercicio()">＋ Novo Exercício</button>
-      </div>
+    <nav id="sidebar">
+      <button id="nav-usuarios" class="active admin-only" onclick="switchView('usuarios')">Criar Usuários</button>
+      <button id="nav-exercicios" onclick="switchView('exercicios')">Lista de Exercícios</button>
+      <button id="nav-grupo-exercicios" class="no-aluno" onclick="switchView('grupo-exercicios')">Exercícios por Grupo</button>
+    </nav>
 
-      <div class="form-novo-ex" id="formNovoEx" style="display: none;">
-        <input type="text" id="novoExNome" placeholder="Nome do exercício..." autocomplete="off">
-        <select id="novoExGrupo"></select>
-        <button class="btn btn-primary" style="padding: 5px; font-size: 11px; width: 100%; justify-content: center;" onclick="salvarNovoExercicio()">Adicionar</button>
-      </div>
+    <main>
+      
+      <section id="view-usuarios" class="view-section active">
+        <h2>Painel de Controle do Admin - Cadastrar Usuários</h2>
+        <form id="form-usuario" onsubmit="createUser(event)">
+          <div class="form-group">
+            <label>Nome do Usuário:</label>
+            <input type="text" id="user-name" required placeholder="Ex: João Silva">
+          </div>
+          <div class="form-group">
+            <label>Tipo de Perfil:</label>
+            <select id="user-role">
+              <option value="professor">Professor</option>
+              <option value="aluno">Aluno</option>
+            </select>
+          </div>
+          <button type="submit">Cadastrar Usuário</button>
+        </form>
 
-      <div id="muscleGroups"></div>
-    </div>
+        <h3>Usuários Cadastrados</h3>
+        <table>
+          <thead>
+            <tr><th>Nome</th><th>Perfil</th></tr>
+          </thead>
+          <tbody id="lista-usuarios">
+            </tbody>
+        </table>
+      </section>
 
-    <div class="main">
-      <div class="ficha-header">
-        <div class="ficha-title-block">
-          <div class="ficha-label">Nome da ficha</div>
-          <input class="ficha-name-input" id="fichaName" placeholder="Ex: Treino A – Peito e Tríceps" />
+      <section id="view-exercicios" class="view-section">
+        <h2>Lista Geral de Exercícios</h2>
+        
+        <div class="professor-only" style="margin-bottom: 30px; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+          <h3>[Professor] Adicionar Novo Exercício</h3>
+          <form id="form-exercicio" onsubmit="createExercise(event)" style="display: flex; gap: 10px; margin-top: 10px;">
+            <input type="text" id="ex-title" placeholder="Título do Exercício" required style="flex: 2;">
+            <input type="text" id="ex-group" placeholder="Grupo (Ex: Cardio, Álgebra)" required style="flex: 1;">
+            <button type="submit" style="background-color: var(--success); color: white;">Salvar</button>
+          </form>
         </div>
-      </div>
 
-      <div class="summary-bar" id="summaryBar"></div>
-      <div class="day-tabs" id="dayTabs"></div>
-      <div id="fichaContent"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Exercício</th>
+              <th>Grupo</th>
+              <th class="professor-only">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="lista-exercicios">
+            </tbody>
+        </table>
+      </section>
 
-      <div class="section-label">Observações do dia</div>
-      <textarea class="notes-area" id="notesArea" placeholder="Anotações sobre cargas, progressão, como se sentiu..."></textarea>
+      <section id="view-grupo-exercicios" class="view-section">
+        <h2>Abas de Exercícios Agrupados por Categoria</h2>
+        <p style="margin-bottom: 15px; color: #666;">Esta seção exibe métricas avançadas e divisões de grupos estruturadas. Alunos não possuem acesso a esta visualização.</p>
+        <div id="lista-grupos">
+          </div>
+      </section>
 
-      <div class="bottom-actions de-edicao">
-        <button class="btn btn-ghost" onclick="clearDay()">🗑️ Limpar dia</button>
-        <button class="btn btn-ghost de-admin" onclick="importJSON()">📥 Importar ficha</button>
-      </div>
-    </div>
+    </main>
   </div>
 
-  <button class="mobile-sidebar-btn de-edicao" id="mobileSidebarBtn" onclick="toggleMobileSidebar()" title="Adicionar exercício">＋</button>
-</div>
+  <script>
+    /* ═══════════════════════════════════
+       BANCO DE DADOS FICTÍCIO (ESTADO)
+    ═══════════════════════════════════ */
+    let currentUserRole = 'admin';
 
-<div class="toast" id="toast"></div>
-<input type="file" id="importInput" accept=".json" style="display:none" onchange="handleImport(event)"/>
+    let usuarios = [
+      { name: 'Carlos Souza', role: 'professor' },
+      { name: 'Ana Oliveira', role: 'aluno' }
+    ];
 
-<script>
-const MUSCLE_COLORS = {
-  'Peito':'#38bdf8','Costas':'#4ade80','Ombro':'#fb923c',
-  'Bíceps':'#f472b6','Tríceps':'#c084fc','Perna':'#facc15',
-  'Glúteo':'#f87171','Panturrilha':'#22d3ee','Abdômen':'#fbbf24','Cardio':'#818cf8'
-};
+    let exercicios = [
+      { id: 1, title: 'Corrida Estacionária de 10 min', group: 'Cardio' },
+      { id: 2, title: 'Resolução de Equações do 2º Grau', group: 'Álgebra' }
+    ];
 
-const EXERCICIOS_PADRAO = {
-  'Peito':[{name:'Supino com halteres',tags:['compound']},{name:'Crucifixo no banco',tags:['isolação']},{name:'Supino inclinado',tags:['compound']}],
-  'Costas':[{name:'Remada unilateral',tags:['compound']},{name:'Remada curvada',tags:['compound']},{name:'Puxada aberta',tags:['pull']}],
-  'Ombro':[{name:'Desenvolvimento c/ halteres',tags:['press']},{name:'Elevação lateral',tags:['isolação']}],
-  'Bíceps':[{name:'Rosca direta',tags:['curl']},{name:'Rosca martelo',tags:['neutral']}],
-  'Tríceps':[{name:'Tríceps testa',tags:['skull']},{name:'Extensão polia',tags:['pulley']}],
-  'Perna':[{name:'Agachamento goblet',tags:['squat']},{name:'Stiff com halteres',tags:['posterior']}],
-  'Glúteo':[{name:'Elevação pélvica',tags:['hip thrust']}],
-  'Panturrilha':[{name:'Panturrilha em pé',tags:['calf']}],
-  'Abdômen':[{name:'Prancha',tags:['core']}],
-  'Cardio':[{name:'Corrida',tags:['cardio']}]
-};
+    /* ═══════════════════════════════════
+       CONTROLE DE PERMISSÕES E LOGS
+    ═══════════════════════════════════ */
+    function applyPermissions() {
+      // Atualiza a interface gráfica com base no perfil atual selecionado
+      document.getElementById('current-badge').textContent = currentUserRole.toUpperCase();
 
-const DAYS = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+      // Regra 1: Exibir ou ocultar elementos com base nas classes de controle
+      document.querySelectorAll('.admin-only').forEach(el => {
+        el.style.display = (currentUserRole === 'admin') ? 'block' : 'none';
+      });
 
-// Estado global de dados e login
-let currentUser = null; 
+      document.querySelectorAll('.professor-only').forEach(el => {
+        el.style.display = (currentUserRole === 'professor') ? 'initial' : 'none';
+      });
 
-let state = {
-  fichaName:'',
-  activeDay:0,
-  openGroup:null,
-  days:DAYS.map(d=>({name:d,exercises:[],notes:''})),
-  customExercises: JSON.parse(JSON.stringify(EXERCICIOS_PADRAO))
-};
+      document.querySelectorAll('.no-aluno').forEach(el => {
+        el.style.display = (currentUserRole !== 'aluno') ? 'block' : 'none';
+      });
 
-// ---- SISTEMA DE AUTENTICAÇÃO ----
-function executarLogin() {
-  const userInp = document.getElementById('username').value.trim().toLowerCase();
-  const passInp = document.getElementById('password').value;
+      // Regra 2: Redirecionamento forçado caso o usuário tente ficar em abas proibidas
+      if (currentUserRole === 'aluno' && document.getElementById('view-usuarios').classList.contains('active')) {
+        switchView('exercicios');
+      } else if (currentUserRole === 'aluno' && document.getElementById('view-grupo-exercicios').classList.contains('active')) {
+        switchView('exercicios');
+      } else if (currentUserRole === 'professor' && document.getElementById('view-usuarios').classList.contains('active')) {
+        switchView('exercicios');
+      }
 
-  if ((userInp === 'admin' || userInp === 'professor' || userInp === 'aluno') && passInp === '123') {
-    currentUser = userInp;
-    localStorage.setItem('fichafit_user', currentUser);
-    
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('appContent').style.display = 'block';
-    
-    document.getElementById('roleBadge').textContent = currentUser;
-    
-    aplicarRestricoesDePerfil();
-    render();
-    showToast(`Bem-vindo, perfil: ${currentUser}!`);
-  } else {
-    alert('Usuário ou senha incorretos.');
-  }
-}
+      // Renderiza as tabelas de acordo com o que o perfil atual pode ver/fazer
+      renderUsuarios();
+      renderExercicios();
+    }
 
-function verificarSessao() {
-  const salvo = localStorage.getItem('fichafit_user');
-  if (salvo) {
-    currentUser = salvo;
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('appContent').style.display = 'block';
-    document.getElementById('roleBadge').textContent = currentUser;
-    aplicarRestricoesDePerfil();
-  }
-}
+    function changeRole(role) {
+      currentUserRole = role;
+      applyPermissions();
+    }
 
-function executarLogout() {
-  localStorage.removeItem('fichafit_user');
-  currentUser = null;
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('appContent').style.display = 'none';
-}
+    function switchView(viewId) {
+      document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
 
-function aplicarRestricoesDePerfil() {
-  // Esconde elementos baseados em classe CSS de privilégio
-  document.querySelectorAll('.de-admin').forEach(el => {
-    el.style.display = (currentUser === 'admin') ? '' : 'none';
-  });
+      document.getElementById('view-' + viewId).classList.add('active');
+      document.getElementById('nav-' + viewId).classList.add('active');
+    }
 
-  document.querySelectorAll('.de-edicao').forEach(el => {
-    el.style.display = (currentUser === 'admin' || currentUser === 'professor') ? '' : 'none';
-  });
+    /* ═══════════════════════════════════
+       AÇÕES DO ADMINISTRADOR
+    ═══════════════════════════════════ */
+    function createUser(e) {
+      e.preventDefault();
+      if (currentUserRole !== 'admin') {
+        alert('Apenas o Administrador pode cadastrar usuários.');
+        return;
+      }
 
-  // Bloqueia inputs cruciais para o Aluno
-  const isAluno = (currentUser === 'aluno');
-  document.getElementById('fichaName').disabled = isAluno;
-  document.getElementById('notesArea').disabled = isAluno;
-}
+      const name = document.getElementById('user-name').value;
+      const role = document.getElementById('user-role').value;
 
-// Carregar Dados Salvos da Ficha
-try {
-  const s = localStorage.getItem('fichafit_v4');
-  if(s) {
-    const parsed = JSON.parse(s);
-    if(!parsed.customExercises) parsed.customExercises = JSON.parse(JSON.stringify(EXERCICIOS_PADRAO));
-    state = parsed;
-  }
-} catch(e){}
+      usuarios.push({ name, role });
+      document.getElementById('form-usuario').reset();
+      renderUsuarios();
+    }
 
-function persist(){try{localStorage.setItem('fichafit_v4',JSON.stringify(state));}catch(e){}}
+    function renderUsuarios() {
+      const tbody = document.getElementById('lista-usuarios');
+      tbody.innerHTML = '';
+      usuarios.forEach(user => {
+        tbody.innerHTML += `<tr><td>${user.name}</td><td><strong>${user.role}</strong></td></tr>`;
+      });
+    }
 
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2400);
-}
+    /* ═══════════════════════════════════
+       AÇÕES DO PROFESSOR
+    ═══════════════════════════════════ */
+    function createExercise(e) {
+      e.preventDefault();
+      if (currentUserRole !== 'professor') {
+        alert('Erro: Apenas professores podem criar exercícios.');
+        return;
+      }
 
-function flushNotes(){
-  if(currentUser === 'aluno') return;
-  const n=document.getElementById('notesArea');
-  if(n)state.days[state.activeDay].notes=n.value;
-}
+      const title = document.getElementById('ex-title').value;
+      const group = document.getElementById('ex-group').value;
 
-function popularSelectGrupos() {
-  const select = document.getElementById('novoExGrupo');
-  select.innerHTML = Object.keys(state.customExercises).map(g => `<option value="${g}">${g}</option>`).join('');
-}
+      exercicios.push({ id: Date.now(), title, group });
+      document.getElementById('form-exercicio').reset();
+      renderExercicios();
+    }
 
-function toggleFormExercicio() {
-  const form = document.getElementById('formNovoEx');
-  form.style.display = form.style.display === 'none' ? 'flex' : 'none';
-}
+    function deleteExercise(id) {
+      if (currentUserRole !== 'professor') {
+        alert('Erro: Apenas professores podem deletar exercícios.');
+        return;
+      }
+      exercicios = exercicios.filter(ex => ex.id !== id);
+      renderExercicios();
+    }
 
-function salvarNovoExercicio() {
-  if(currentUser !== 'admin') return;
-  const nomeInput = document.getElementById('novoExNome');
-  const grupoSelect = document.getElementById('novoExGrupo');
-  const nome = nomeInput.value.trim();
-  const grupo = grupoSelect.value;
+    function renderExercicios() {
+      // 1. Renderiza lista geral da aba 2
+      const tbody = document.getElementById('lista-exercicios');
+      tbody.innerHTML = '';
+      
+      exercicios.forEach(ex => {
+        let actionTd = currentUserRole === 'professor' 
+          ? `<td><button class="btn-danger" onclick="deleteExercise(${ex.id})">Excluir</button></td>` 
+          : '';
+          
+        tbody.innerHTML += `
+          <tr>
+            <td>${ex.title}</td>
+            <td>${ex.group}</td>
+            ${actionTd}
+          </tr>`;
+      });
 
-  if(!nome) return alert('Digite o nome do exercício.');
-  if(state.customExercises[grupo].some(e => e.name.toLowerCase() === nome.toLowerCase())) return alert('Exercício já cadastrado.');
+      // 2. Renderiza aba agrupada (Aba 3) para Admin e Professor
+      const grupoDiv = document.getElementById('lista-grupos');
+      grupoDiv.innerHTML = '';
+      
+      const grupos = {};
+      exercicios.forEach(ex => {
+        if (!grupos[ex.group]) grupos[ex.group] = [];
+        grupos[ex.group].push(ex.title);
+      });
 
-  state.customExercises[grupo].push({ name: nome, tags: ['custom'] });
-  nomeInput.value = '';
-  toggleFormExercicio();
-  persist();
-  renderSidebar();
-}
+      for (let g in grupos) {
+        grupoDiv.innerHTML += `
+          <div style="margin-bottom:15px; padding:10px; border-left:4px solid var(--primary); background:#f4f4f4;">
+            <strong>Grupo: ${g}</strong>
+            <ul style="margin-left:20px; margin-top:5px;">
+              ${grupos[g].map(title => `<li>${title}</li>`).join('')}
+            </ul>
+          </div>`;
+      }
+    }
 
-function excluirExercicioDoGrupo(grupo, idx, event) {
-  event.stopPropagation();
-  if(currentUser !== 'admin') return;
-  if(!confirm("Remover este exercício da biblioteca padrão?")) return;
-
-  state.customExercises[grupo].splice(idx, 1);
-  persist();
-  renderSidebar();
-}
-
-// ---- RENDERS ----
-function renderSidebar(){
-  const el=document.getElementById('muscleGroups');
-  el.innerHTML=Object.entries(state.customExercises).map(([group,exs])=>{
-    const color=MUSCLE_COLORS[group]||'#9B92BC';
-    const isOpen=state.openGroup===group;
-    const count=state.days[state.activeDay].exercises.filter(e=>e.group===group).length;
-    return `<div class="muscle-group">
-      <button class="muscle-btn ${isOpen?'active':''}" onclick="toggleGroup('${group}')">
-        <span class="muscle-dot" style="background:${color}"></span>
-        <span class="muscle-name">${group}</span>
-        ${count>0?`<span class="muscle-count">${count}</span>`:''}
-      </button>
-      ${isOpen?`<div class="ex-panel"><div class="ex-list">
-        ${exs.map((ex,i)=>`<div class="ex-item" ${currentUser !== 'aluno' ? `onclick="addExercise('${group}',${i})"` : ''}>
-          <div class="ex-info">
-            <div class="ex-name">${ex.name}</div>
-          </div>
-          <div class="ex-actions-cell">
-            ${currentUser === 'admin' ? `<button class="ex-del-btn" onclick="excluirExercicioDoGrupo('${group}',${i}, event)">🗑️</button>` : ''}
-            ${currentUser !== 'aluno' ? `<button class="ex-add-btn" onclick="event.stopPropagation();addExercise('${group}',${i})">+</button>` : ''}
-          </div>
-        </div>`).join('')}
-      </div></div>`:''}
-    </div>`;
-  }).join('');
-}
-
-function renderDayTabs(){
-  const el=document.getElementById('dayTabs');
-  el.innerHTML=state.days.map((d,i)=>{
-    const has=d.exercises.length>0;
-    return `<button class="day-tab ${i===state.activeDay?'active':''}" onclick="switchDay(${i})">
-      ${d.name}${has?` <span style="color:${i===state.activeDay?'#000':'var(--cor-primaria)'};font-size:9px;">●</span>`:''}
-    </button>`;
-  }).join('');
-}
-
-function renderSummary(){
-  const day=state.days[state.activeDay];
-  const total=day.exercises.length;
-  const totalSeries=day.exercises.reduce((a,e)=>a+(parseInt(e.series)||0),0);
-  const el=document.getElementById('summaryBar');
-  if(total===0){el.innerHTML='';return;}
-  el.innerHTML=`
-    <div class="summary-pill">🏋️ <strong>${total}</strong> exercícios</div>
-    <div class="summary-pill">🔁 <strong>${totalSeries}</strong> séries totais</div>
-  `;
-}
-
-function renderFicha(){
-  const el=document.getElementById('fichaContent');
-  const day=state.days[state.activeDay];
-
-  if(day.exercises.length===0){
-    el.innerHTML=`<div class="ficha-empty"><div class="ficha-empty-icon">📋</div><div class="ficha-empty-text">Nenhum exercício para hoje.</div></div>`;
-    return;
-  }
-
-  const disabledAttr = (currentUser === 'aluno') ? 'disabled' : '';
-
-  const grouped={};
-  day.exercises.forEach(ex=>{
-    if(!grouped[ex.group])grouped[ex.group]=[];
-    grouped[ex.group].push(ex);
-  });
-
-  el.innerHTML=Object.entries(grouped).map(([group,exs])=>{
-    const color=MUSCLE_COLORS[group]||'#9B92BC';
-    return `<div class="ficha-group">
-      <div class="ficha-group-header">
-        <span class="ficha-group-dot" style="background:${color}"></span>
-        <span class="ficha-group-name" style="color:${color}">${group}</span>
-      </div>
-      ${exs.map((ex,i)=>`
-        <div class="ficha-ex-card ${ex.done ? 'row-concluida' : ''}">
-          <input type="checkbox" class="check-diario" ${ex.done ? 'checked' : ''} onchange="toggleCheckDiario('${group}',${i})">
-          <div style="flex:1">
-            <div class="ficha-ex-name">${ex.name}</div>
-          </div>
-          <div class="set-input-group">
-            <span class="set-label">Séries</span>
-            <input class="set-input" type="number" value="${ex.series||4}" ${disabledAttr}
-              onchange="updateEx('${group}',${i},'series',this.value)"/>
-          </div>
-          <div class="set-input-group">
-            <span class="set-label">Reps</span>
-            <input class="set-input" type="text" value="${ex.reps||12}" ${disabledAttr}
-              onchange="updateEx('${group}',${i},'reps',this.value)"/>
-          </div>
-          <div class="set-input-group">
-            <span class="set-label">Carga</span>
-            <input class="set-input" type="text" value="${ex.weight||''}" placeholder="—" ${disabledAttr}
-              onchange="updateEx('${group}',${i},'weight',this.value)"/>
-          </div>
-          ${currentUser !== 'aluno' ? `<button class="ficha-ex-remove" onclick="removeExercise('${group}',${i})">✕</button>` : '<div></div>'}
-        </div>
-      `).join('')}
-    </div>`;
-  }).join('');
-
-  document.getElementById('notesArea').value=day.notes||'';
-}
-
-function render(){
-  renderSidebar();
-  renderDayTabs();
-  renderSummary();
-  renderFicha();
-  document.getElementById('fichaName').value=state.fichaName||'';
-}
-
-// ---- INTERAÇÕES ----
-function toggleGroup(group){ state.openGroup=state.openGroup===group?null:group; renderSidebar(); }
-function switchDay(i){ flushNotes(); state.activeDay=i; state.openGroup=null; closeMobileSidebar(); render(); }
-
-function toggleCheckDiario(group, idx) {
-  const day = state.days[state.activeDay];
-  const groupExs = day.exercises.filter(e => e.group === group);
-  if(groupExs[idx]) {
-    groupExs[idx].done = !groupExs[idx].done;
-  }
-  persist();
-  renderFicha();
-}
-
-function addExercise(group,idx){
-  if(currentUser === 'aluno') return;
-  const ex=state.customExercises[group][idx];
-  const day=state.days[state.activeDay];
-  day.exercises.push({name:ex.name,group,series:4,reps:12,weight:'', done: false});
-  persist();render();
-}
-
-function removeExercise(group,idx){
-  if(currentUser === 'aluno') return;
-  const day=state.days[state.activeDay];
-  const groupExs=day.exercises.filter(e=>e.group===group);
-  const toRemove=groupExs[idx];
-  day.exercises=day.exercises.filter(e=>!(e.name===toRemove.name&&e.group===toRemove.group));
-  persist();render();
-}
-
-function updateEx(group,idx,field,value){
-  if(currentUser === 'aluno') return;
-  const day=state.days[state.activeDay];
-  const groupExs=day.exercises.filter(e=>e.group===group);
-  const ex=groupExs[idx];
-  if(ex) ex[field]= value;
-  persist();renderSummary();
-}
-
-function clearDay(){
-  if(currentUser === 'aluno') return;
-  if(!confirm('Limpar o dia?'))return;
-  state.days[state.activeDay].exercises=[];
-  state.days[state.activeDay].notes='';
-  persist();render();
-}
-
-function saveFicha(){ if(currentUser !== 'aluno') { flushNotes(); state.fichaName=document.getElementById('fichaName').value; persist(); showToast('✅ Salvo!'); } }
-function printFicha(){ flushNotes(); window.print(); }
-
-function exportJSON(){
-  if(currentUser !== 'admin') return;
-  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`ficha_${(state.fichaName||'treino')}.json`;
-  a.click();
-}
-
-function importJSON(){ if(currentUser === 'admin') document.getElementById('importInput').click(); }
-function handleImport(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    try{
-      const imported=JSON.parse(ev.target.result);
-      if(imported.days){ Object.assign(state,imported); persist(); render(); showToast('📥 Importado!'); }
-    }catch{alert('Erro ao importar');}
-  };
-  reader.readAsText(file);
-}
-
-function toggleMobileSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
-function closeMobileSidebar(){ document.getElementById('sidebar').classList.remove('open'); }
-
-document.getElementById('fichaName').addEventListener('input',e=>{ if(currentUser !== 'aluno') state.fichaName=e.target.value;});
-document.getElementById('notesArea').addEventListener('input',e=>{ if(currentUser !== 'aluno') state.days[state.activeDay].notes=e.target.value;});
-
-// Inicializar aplicativo
-verificarSessao();
-popularSelectGrupos();
-render();
-</script>
+    // Inicialização do carregamento da página
+    document.addEventListener('DOMContentLoaded', () => {
+      applyPermissions();
+    });
+  </script>
 </body>
 </html>
