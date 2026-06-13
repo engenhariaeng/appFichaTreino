@@ -23,7 +23,7 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;background:var(--bg-principal);color:var(--texto-claro);min-height:100vh;}
 
-/* TELA DE LOGIN */
+/* TELA DE LOGIN & RECUPERAÇÃO */
 .login-screen {
   display: flex;
   align-items: center;
@@ -69,6 +69,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
   font-size: 14px;
   justify-content: center;
   margin-top: 10px;
+}
+.forgot-password-link {
+  display: block;
+  text-align: right;
+  font-size: 12px;
+  color: var(--texto-mutado);
+  text-decoration: none;
+  margin-top: -8px;
+  margin-bottom: 16px;
+  transition: color 0.15s;
+  cursor: pointer;
+}
+.forgot-password-link:hover {
+  color: var(--cor-primaria);
 }
 
 /* APP CONTENT */
@@ -315,7 +329,7 @@ input:focus, select:focus { border-color: var(--cor-primaria); }
 <body>
 
 <div class="login-screen" id="loginScreen">
-  <div class="login-box">
+  <div class="login-box" id="loginBox">
     <div class="login-title">💪 Ficha<span>Fit</span> Login</div>
     <div class="form-group">
       <label>Usuário</label>
@@ -325,7 +339,22 @@ input:focus, select:focus { border-color: var(--cor-primaria); }
       <label>Senha</label>
       <input type="password" id="password" placeholder="Digite sua senha">
     </div>
+    <a class="forgot-password-link" onclick="mostrarTelaEsqueciSenha()">Esqueci minha senha</a>
     <button class="btn btn-primary btn-login" onclick="executarLogin()">Entrar no Sistema</button>
+  </div>
+
+  <div class="login-box" id="resetBox" style="display: none;">
+    <div class="login-title">🔒 Resetar Senha</div>
+    <div class="form-group">
+      <label>Confirmar seu Usuário</label>
+      <input type="text" id="resetUsername" placeholder="Seu nome de usuário exato">
+    </div>
+    <div class="form-group">
+      <label>Nova Senha</label>
+      <input type="password" id="resetNewPassword" placeholder="Crie uma nova senha estável">
+    </div>
+    <button class="btn btn-primary btn-login" onclick="executarResetSenha()">Salvar Nova Senha</button>
+    <button class="btn btn-ghost btn-login" style="margin-top:8px;" onclick="mostrarTelaLogin()">Voltar ao Login</button>
   </div>
 </div>
 
@@ -358,8 +387,7 @@ input:focus, select:focus { border-color: var(--cor-primaria); }
         <button class="btn btn-primary" style="width:100%; padding:5px; font-size:11px; justify-content:center;" onclick="cadastrarUsuario()">Criar Acesso</button>
         
         <div class="sidebar-title" style="margin-top:14px; margin-bottom:6px; font-size:10px;">👥 Usuários Cadastrados</div>
-        <div class="admin-users-list-wrapper" id="adminUsersList">
-          </div>
+        <div class="admin-users-list-wrapper" id="adminUsersList"></div>
       </div>
 
       <div class="sidebar-header-actions">
@@ -448,6 +476,42 @@ let state = {
   days:DAYS.map(d=>({name:d,exercises:[],notes:''})),
   customExercises: JSON.parse(JSON.stringify(EXERCICIOS_PADRAO))
 };
+
+// ---- INTERFACES DE RESET DE SENHA ----
+function mostrarTelaEsqueciSenha() {
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('resetBox').style.display = 'block';
+  document.getElementById('resetUsername').value = document.getElementById('username').value;
+}
+
+function mostrarTelaLogin() {
+  document.getElementById('loginBox').style.display = 'block';
+  document.getElementById('resetBox').style.display = 'none';
+}
+
+function executarResetSenha() {
+  const userReset = document.getElementById('resetUsername').value.trim().toLowerCase();
+  const novaSenha = document.getElementById('resetNewPassword').value;
+
+  if(!userReset || !novaSenha) {
+    alert('Por favor, preencha o seu usuário e digite a nova senha.');
+    return;
+  }
+
+  // Verifica se o usuário de fato existe no sistema
+  if (!usuariosCadastrados[userReset]) {
+    alert('Usuário não encontrado no sistema. Verifique a grafia.');
+    return;
+  }
+
+  // Atualiza a senha no banco de dados local
+  usuariosCadastrados[userReset].password = novaSenha;
+  localStorage.setItem('fichafit_users_db', JSON.stringify(usuariosCadastrados));
+
+  document.getElementById('resetNewPassword').value = '';
+  alert(`Sucesso! A senha do usuário "${userReset}" foi atualizada.`);
+  mostrarTelaLogin();
+}
 
 // ---- SISTEMA DE LOGIN ----
 function executarLogin() {
@@ -614,7 +678,7 @@ function salvarNovoExercicio() {
   const nomeInput = document.getElementById('novoExNome');
   const grupoSelect = document.getElementById('novoExGrupo');
   const nome = nomeInput.value.trim();
-  const grupo = grupoSelect.value;
+  const grupo = groupSelect.value;
 
   if(!nome) return alert('Digite o nome.');
   if(state.customExercises[grupo].some(e => e.name.toLowerCase() === nome.toLowerCase())) return alert('Exercício já cadastrado.');
