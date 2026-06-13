@@ -70,18 +70,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
   justify-content: center;
   margin-top: 10px;
 }
-.login-hint {
-  font-size: 11px;
-  color: var(--texto-mutado);
-  margin-top: 20px;
-  line-height: 1.5;
-  background: rgba(255,255,255,0.02);
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px dashed var(--borda);
-}
 
-/* APP CONTENT (Escondido por padrão antes do login) */
+/* APP CONTENT */
 .app-content { display: none; }
 
 /* HEADER */
@@ -102,12 +92,53 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 }
 .header-actions{display:flex;gap:8px;align-items: center;}
 
-/* LAYOUT */
+/* LAYOUT DINÂMICO SE FOR ALUNO */
 .container{display:grid;grid-template-columns:300px 1fr;min-height:calc(100vh - 57px);}
+.container.layout-aluno { grid-template-columns: 1fr; } 
+
 .sidebar{background:var(--bg-card);border-right:1px solid var(--borda);padding:18px 14px;overflow-y:auto;max-height:calc(100vh - 57px);position:sticky;top:57px;}
 .main{padding:22px 24px;overflow-y:auto;}
 
-/* SIDEBAR & GERENCIADOR */
+/* PAINEL ADMIN CADASTRO */
+.admin-user-panel {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 20px;
+}
+.admin-user-panel input, .admin-user-panel select {
+  width: 100%;
+  padding: 6px;
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+
+/* LISTA DE USUÁRIOS GERENCIÁVEL */
+.admin-users-list-wrapper {
+  margin-top: 12px;
+  border-top: 1px solid var(--borda);
+  padding-top: 12px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+.admin-user-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  font-size: 11px;
+}
+.admin-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.admin-user-name { font-weight: 600; color: var(--texto-claro); }
+.admin-user-role { font-size: 10px; color: var(--texto-mutado); text-transform: uppercase;}
+
+/* SIDEBAR & GERENCIADOR EXERCICIOS */
 .sidebar-header-actions {
   display: flex;
   flex-direction: column;
@@ -163,8 +194,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 .ex-item:hover{background:var(--bg-card);}
 .ex-info{flex:1;}
 .ex-name{font-size:13px;font-weight:500;color:var(--texto-claro);}
-.ex-tags{display:flex;gap:4px;margin-top:3px;flex-wrap:wrap;}
-.ex-tag{font-size:10px;padding:1px 6px;border-radius:4px;background:var(--bg-card);color:var(--texto-mutado);font-weight:500;border: 1px solid var(--borda);}
 
 .ex-actions-cell {
   display: flex;
@@ -234,9 +263,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
   accent-color: var(--cor-primaria);
   cursor: pointer;
 }
-.row-concluida {
-  opacity: 0.4;
-}
+.row-concluida { opacity: 0.4; }
 
 /* NOTES */
 .section-label{font-size:11px;font-weight:600;color:var(--texto-mutado);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;margin-top:16px;}
@@ -249,7 +276,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
 .summary-pill{background:var(--bg-card);border:1px solid var(--borda);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--texto-mutado);display:flex;align-items:center;gap:6px;}
 .summary-pill strong{color:var(--cor-primaria);font-size:14px;}
 
-/* BUTTONS / INPUT GENERIC */
+/* BUTTONS / INPUTS */
 input, select {
   background: var(--bg-input);
   border: 1px solid var(--borda);
@@ -273,7 +300,7 @@ input:focus, select:focus { border-color: var(--cor-primaria); }
 
 /* MOBILE */
 @media (max-width: 680px) {
-  .container{grid-template-columns:1fr;grid-template-rows:auto 1fr;}
+  .container:not(.layout-aluno){grid-template-columns:1fr;grid-template-rows:auto 1fr;}
   .sidebar{position:fixed;left:0;bottom:0;top:auto;width:100%;max-height:65vh;border-right:none;border-top:1px solid var(--borda);z-index:90;display:none;border-radius:16px 16px 0 0;}
   .sidebar.open{display:block;}
   .main{padding:16px;}
@@ -287,7 +314,6 @@ input:focus, select:focus { border-color: var(--cor-primaria); }
 </head>
 <body>
 
-<!-- TELA DE LOGIN -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div class="login-title">💪 Ficha<span>Fit</span> Login</div>
@@ -300,16 +326,9 @@ input:focus, select:focus { border-color: var(--cor-primaria); }
       <input type="password" id="password" placeholder="Digite sua senha">
     </div>
     <button class="btn btn-primary btn-login" onclick="executarLogin()">Entrar no Sistema</button>
-    <div class="login-hint">
-      <strong>Credenciais de teste:</strong><br>
-      • Admin: admin / 123<br>
-      • Professor: professor / 123<br>
-      • Aluno: aluno / 123
-    </div>
   </div>
 </div>
 
-<!-- CONTEÚDO PRINCIPAL DO APLICATIVO -->
 <div class="app-content" id="appContent">
   <div class="header">
     <div class="logo">
@@ -325,17 +344,33 @@ input:focus, select:focus { border-color: var(--cor-primaria); }
     </div>
   </div>
 
-  <div class="container">
+  <div class="container" id="appContainer">
     <div class="sidebar" id="sidebar">
+      
+      <div class="admin-user-panel de-admin">
+        <div class="sidebar-title" style="margin-bottom:8px; color:var(--cor-primaria)">⚙️ Painel Admin: Criar Usuário</div>
+        <input type="text" id="newUsername" placeholder="Nome do usuário...">
+        <input type="password" id="newPassword" placeholder="Senha...">
+        <select id="newUserRole">
+          <option value="professor">Professor</option>
+          <option value="aluno">Aluno</option>
+        </select>
+        <button class="btn btn-primary" style="width:100%; padding:5px; font-size:11px; justify-content:center;" onclick="cadastrarUsuario()">Criar Acesso</button>
+        
+        <div class="sidebar-title" style="margin-top:14px; margin-bottom:6px; font-size:10px;">👥 Usuários Cadastrados</div>
+        <div class="admin-users-list-wrapper" id="adminUsersList">
+          </div>
+      </div>
+
       <div class="sidebar-header-actions">
         <div class="sidebar-title">Exercícios por grupo</div>
-        <button class="btn-novo-ex de-admin" id="btnShowNovoEx" onclick="toggleFormExercicio()">＋ Novo Exercício</button>
+        <button class="btn-novo-ex de-edicao" id="btnShowNovoEx" onclick="toggleFormExercicio()">＋ Novo Exercício</button>
       </div>
 
       <div class="form-novo-ex" id="formNovoEx" style="display: none;">
         <input type="text" id="novoExNome" placeholder="Nome do exercício..." autocomplete="off">
         <select id="novoExGrupo"></select>
-        <button class="btn btn-primary" style="padding: 5px; font-size: 11px; width: 100%; justify-content: center;" onclick="salvarNovoExercicio()">Adicionar</button>
+        <button class="btn btn-primary" style="padding: 5px; font-size: 11px; width: 100%; justify-content: center;" onclick="salvarNovoExercicio()">Adicionar à Base</button>
       </div>
 
       <div id="muscleGroups"></div>
@@ -377,22 +412,34 @@ const MUSCLE_COLORS = {
 };
 
 const EXERCICIOS_PADRAO = {
-  'Peito':[{name:'Supino com halteres',tags:['compound']},{name:'Crucifixo no banco',tags:['isolação']},{name:'Supino inclinado',tags:['compound']}],
-  'Costas':[{name:'Remada unilateral',tags:['compound']},{name:'Remada curvada',tags:['compound']},{name:'Puxada aberta',tags:['pull']}],
-  'Ombro':[{name:'Desenvolvimento c/ halteres',tags:['press']},{name:'Elevação lateral',tags:['isolação']}],
-  'Bíceps':[{name:'Rosca direta',tags:['curl']},{name:'Rosca martelo',tags:['neutral']}],
-  'Tríceps':[{name:'Tríceps testa',tags:['skull']},{name:'Extensão polia',tags:['pulley']}],
-  'Perna':[{name:'Agachamento goblet',tags:['squat']},{name:'Stiff com halteres',tags:['posterior']}],
-  'Glúteo':[{name:'Elevação pélvica',tags:['hip thrust']}],
-  'Panturrilha':[{name:'Panturrilha em pé',tags:['calf']}],
-  'Abdômen':[{name:'Prancha',tags:['core']}],
-  'Cardio':[{name:'Corrida',tags:['cardio']}]
+  'Peito':[{name:'Supino com halteres'},{name:'Crucifixo no banco'},{name:'Supino inclinado'}],
+  'Costas':[{name:'Remada unilateral'},{name:'Remada curvada'},{name:'Puxada aberta'}],
+  'Ombro':[{name:'Desenvolvimento c/ halteres'},{name:'Elevação lateral'}],
+  'Bíceps':[{name:'Rosca direta'},{name:'Rosca martelo'}],
+  'Tríceps':[{name:'Tríceps testa'},{name:'Extensão polia'}],
+  'Perna':[{name:'Agachamento goblet'},{name:'Stiff com halteres'}],
+  'Glúteo':[{name:'Elevação pélvica'}],
+  'Panturrilha':[{name:'Panturrilha em pé'}],
+  'Abdômen':[{name:'Prancha'}],
+  'Cardio':[{name:'Corrida'}]
 };
 
 const DAYS = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
 
-// Estado global de dados e login
+// Base de usuários inicial no localStorage
+let usuariosCadastrados = {
+  'admin': { password: '123', role: 'admin' },
+  'professor': { password: '123', role: 'professor' },
+  'aluno': { password: '123', role: 'aluno' }
+};
+
+try {
+  const usersSalvos = localStorage.getItem('fichafit_users_db');
+  if(usersSalvos) usuariosCadastrados = JSON.parse(usersSalvos);
+} catch(e){}
+
 let currentUser = null; 
+let currentUserRole = null;
 
 let state = {
   fichaName:'',
@@ -402,65 +449,135 @@ let state = {
   customExercises: JSON.parse(JSON.stringify(EXERCICIOS_PADRAO))
 };
 
-// ---- SISTEMA DE AUTENTICAÇÃO ----
+// ---- SISTEMA DE LOGIN ----
 function executarLogin() {
   const userInp = document.getElementById('username').value.trim().toLowerCase();
   const passInp = document.getElementById('password').value;
 
-  if ((userInp === 'admin' || userInp === 'professor' || userInp === 'aluno') && passInp === '123') {
+  if (usuariosCadastrados[userInp] && usuariosCadastrados[userInp].password === passInp) {
     currentUser = userInp;
+    currentUserRole = usuariosCadastrados[userInp].role;
+    
     localStorage.setItem('fichafit_user', currentUser);
+    localStorage.setItem('fichafit_user_role', currentUserRole);
     
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('appContent').style.display = 'block';
-    
-    document.getElementById('roleBadge').textContent = currentUser;
+    document.getElementById('roleBadge').textContent = currentUserRole;
     
     aplicarRestricoesDePerfil();
     render();
-    showToast(`Bem-vindo, perfil: ${currentUser}!`);
+    showToast(`Bem-vindo! Perfil: ${currentUserRole}`);
   } else {
     alert('Usuário ou senha incorretos.');
   }
 }
 
 function verificarSessao() {
-  const salvo = localStorage.getItem('fichafit_user');
-  if (salvo) {
-    currentUser = salvo;
+  const salvoUser = localStorage.getItem('fichafit_user');
+  const salvoRole = localStorage.getItem('fichafit_user_role');
+  if (salvoUser && salvoRole) {
+    currentUser = salvoUser;
+    currentUserRole = salvoRole;
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('appContent').style.display = 'block';
-    document.getElementById('roleBadge').textContent = currentUser;
+    document.getElementById('roleBadge').textContent = currentUserRole;
     aplicarRestricoesDePerfil();
   }
 }
 
 function executarLogout() {
   localStorage.removeItem('fichafit_user');
+  localStorage.removeItem('fichafit_user_role');
   currentUser = null;
+  currentUserRole = null;
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('appContent').style.display = 'none';
+  document.getElementById('username').value = '';
+  document.getElementById('password').value = '';
 }
 
+// ---- CONTROLE DE PERMISSÕES E INTERFACE ----
 function aplicarRestricoesDePerfil() {
-  // Esconde elementos baseados em classe CSS de privilégio
+  const container = document.getElementById('appContainer');
+  const sidebar = document.getElementById('sidebar');
+
+  if (currentUserRole === 'aluno') {
+    sidebar.style.display = 'none';
+    container.classList.add('layout-aluno');
+  } else {
+    sidebar.style.display = '';
+    container.classList.remove('layout-aluno');
+  }
+
   document.querySelectorAll('.de-admin').forEach(el => {
-    el.style.display = (currentUser === 'admin') ? '' : 'none';
+    el.style.display = (currentUserRole === 'admin') ? '' : 'none';
   });
 
   document.querySelectorAll('.de-edicao').forEach(el => {
-    el.style.display = (currentUser === 'admin' || currentUser === 'professor') ? '' : 'none';
+    el.style.display = (currentUserRole === 'admin' || currentUserRole === 'professor') ? '' : 'none';
   });
 
-  // Bloqueia inputs cruciais para o Aluno
-  const isAluno = (currentUser === 'aluno');
+  const isAluno = (currentUserRole === 'aluno');
   document.getElementById('fichaName').disabled = isAluno;
   document.getElementById('notesArea').disabled = isAluno;
+
+  if (currentUserRole === 'admin') {
+    renderListaUsuariosAdmin();
+  }
 }
 
-// Carregar Dados Salvos da Ficha
+// ---- GESTÃO DE USUÁRIOS (EXCLUSIVO ADMIN) ----
+function cadastrarUsuario() {
+  if (currentUserRole !== 'admin') return;
+
+  const newUserInp = document.getElementById('newUsername').value.trim().toLowerCase();
+  const newPassInp = document.getElementById('newPassword').value;
+  const newRoleInp = document.getElementById('newUserRole').value;
+
+  if(!newUserInp || !newPassInp) return alert('Preencha o usuário e a senha.');
+  if(usuariosCadastrados[newUserInp]) return alert('Este nome de usuário já existe!');
+
+  usuariosCadastrados[newUserInp] = { password: newPassInp, role: newRoleInp };
+  localStorage.setItem('fichafit_users_db', JSON.stringify(usuariosCadastrados));
+  
+  document.getElementById('newUsername').value = '';
+  document.getElementById('newPassword').value = '';
+  renderListaUsuariosAdmin();
+  showToast(`Usuário criado!`);
+}
+
+function excluirUsuario(usernameAlvo) {
+  if (currentUserRole !== 'admin') return;
+  if (usernameAlvo === currentUser) return alert('Você não pode excluir sua própria conta em uso!');
+  if (!confirm(`Tem certeza que deseja excluir permanentemente o usuário "${usernameAlvo}"?`)) return;
+
+  delete usuariosCadastrados[usernameAlvo];
+  localStorage.setItem('fichafit_users_db', JSON.stringify(usuariosCadastrados));
+  renderListaUsuariosAdmin();
+  showToast(`Usuário removido.`);
+}
+
+function renderListaUsuariosAdmin() {
+  const wrapper = document.getElementById('adminUsersList');
+  if(!wrapper) return;
+
+  wrapper.innerHTML = Object.entries(usuariosCadastrados).map(([user, dados]) => {
+    return `
+      <div class="admin-user-row">
+        <div class="admin-user-info">
+          <span class="admin-user-name">${user}</span>
+          <span class="admin-user-role">${dados.role}</span>
+        </div>
+        ${user !== currentUser ? `<button class="ex-del-btn" style="height:20px; width:20px; font-size:10px;" onclick="excluirUsuario('${user}')" title="Excluir Usuário">🗑️</button>` : '<span style="font-size:10px; color:var(--cor-primaria)">ativo</span>'}
+      </div>
+    `;
+  }).join('');
+}
+
+// ---- PERSISTÊNCIA DAS FICHAS ----
 try {
-  const s = localStorage.getItem('fichafit_v4');
+  const s = localStorage.getItem('fichafit_v6');
   if(s) {
     const parsed = JSON.parse(s);
     if(!parsed.customExercises) parsed.customExercises = JSON.parse(JSON.stringify(EXERCICIOS_PADRAO));
@@ -468,16 +585,16 @@ try {
   }
 } catch(e){}
 
-function persist(){try{localStorage.setItem('fichafit_v4',JSON.stringify(state));}catch(e){}}
+function persist(){try{localStorage.setItem('fichafit_v6',JSON.stringify(state));}catch(e){}}
 
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2400);
+  setTimeout(()=>t.classList.remove('show'), 2400);
 }
 
 function flushNotes(){
-  if(currentUser === 'aluno') return;
+  if(currentUserRole === 'aluno') return;
   const n=document.getElementById('notesArea');
   if(n)state.days[state.activeDay].notes=n.value;
 }
@@ -493,16 +610,16 @@ function toggleFormExercicio() {
 }
 
 function salvarNovoExercicio() {
-  if(currentUser !== 'admin') return;
+  if(currentUserRole === 'aluno') return; 
   const nomeInput = document.getElementById('novoExNome');
   const grupoSelect = document.getElementById('novoExGrupo');
   const nome = nomeInput.value.trim();
   const grupo = grupoSelect.value;
 
-  if(!nome) return alert('Digite o nome do exercício.');
+  if(!nome) return alert('Digite o nome.');
   if(state.customExercises[grupo].some(e => e.name.toLowerCase() === nome.toLowerCase())) return alert('Exercício já cadastrado.');
 
-  state.customExercises[grupo].push({ name: nome, tags: ['custom'] });
+  state.customExercises[grupo].push({ name: nome, tags: [] });
   nomeInput.value = '';
   toggleFormExercicio();
   persist();
@@ -511,8 +628,8 @@ function salvarNovoExercicio() {
 
 function excluirExercicioDoGrupo(grupo, idx, event) {
   event.stopPropagation();
-  if(currentUser !== 'admin') return;
-  if(!confirm("Remover este exercício da biblioteca padrão?")) return;
+  if(currentUserRole === 'aluno') return; 
+  if(!confirm("Remover este exercício da biblioteca?")) return;
 
   state.customExercises[grupo].splice(idx, 1);
   persist();
@@ -521,6 +638,8 @@ function excluirExercicioDoGrupo(grupo, idx, event) {
 
 // ---- RENDERS ----
 function renderSidebar(){
+  if (currentUserRole === 'aluno') return; 
+  
   const el=document.getElementById('muscleGroups');
   el.innerHTML=Object.entries(state.customExercises).map(([group,exs])=>{
     const color=MUSCLE_COLORS[group]||'#9B92BC';
@@ -533,13 +652,13 @@ function renderSidebar(){
         ${count>0?`<span class="muscle-count">${count}</span>`:''}
       </button>
       ${isOpen?`<div class="ex-panel"><div class="ex-list">
-        ${exs.map((ex,i)=>`<div class="ex-item" ${currentUser !== 'aluno' ? `onclick="addExercise('${group}',${i})"` : ''}>
+        ${exs.map((ex,i)=>`<div class="ex-item" onclick="addExercise('${group}',${i})">
           <div class="ex-info">
             <div class="ex-name">${ex.name}</div>
           </div>
           <div class="ex-actions-cell">
-            ${currentUser === 'admin' ? `<button class="ex-del-btn" onclick="excluirExercicioDoGrupo('${group}',${i}, event)">🗑️</button>` : ''}
-            ${currentUser !== 'aluno' ? `<button class="ex-add-btn" onclick="event.stopPropagation();addExercise('${group}',${i})">+</button>` : ''}
+            <button class="ex-del-btn" onclick="excluirExercicioDoGrupo('${group}',${i}, event)">🗑️</button>
+            <button class="ex-add-btn" onclick="event.stopPropagation();addExercise('${group}',${i})">+</button>
           </div>
         </div>`).join('')}
       </div></div>`:''}
@@ -578,7 +697,7 @@ function renderFicha(){
     return;
   }
 
-  const disabledAttr = (currentUser === 'aluno') ? 'disabled' : '';
+  const disabledAttr = (currentUserRole === 'aluno') ? 'disabled' : '';
 
   const grouped={};
   day.exercises.forEach(ex=>{
@@ -614,7 +733,7 @@ function renderFicha(){
             <input class="set-input" type="text" value="${ex.weight||''}" placeholder="—" ${disabledAttr}
               onchange="updateEx('${group}',${i},'weight',this.value)"/>
           </div>
-          ${currentUser !== 'aluno' ? `<button class="ficha-ex-remove" onclick="removeExercise('${group}',${i})">✕</button>` : '<div></div>'}
+          ${currentUserRole !== 'aluno' ? `<button class="ficha-ex-remove" onclick="removeExercise('${group}',${i})">✕</button>` : '<div></div>'}
         </div>
       `).join('')}
     </div>`;
@@ -646,7 +765,7 @@ function toggleCheckDiario(group, idx) {
 }
 
 function addExercise(group,idx){
-  if(currentUser === 'aluno') return;
+  if(currentUserRole === 'aluno') return;
   const ex=state.customExercises[group][idx];
   const day=state.days[state.activeDay];
   day.exercises.push({name:ex.name,group,series:4,reps:12,weight:'', done: false});
@@ -654,7 +773,7 @@ function addExercise(group,idx){
 }
 
 function removeExercise(group,idx){
-  if(currentUser === 'aluno') return;
+  if(currentUserRole === 'aluno') return;
   const day=state.days[state.activeDay];
   const groupExs=day.exercises.filter(e=>e.group===group);
   const toRemove=groupExs[idx];
@@ -663,7 +782,7 @@ function removeExercise(group,idx){
 }
 
 function updateEx(group,idx,field,value){
-  if(currentUser === 'aluno') return;
+  if(currentUserRole === 'aluno') return;
   const day=state.days[state.activeDay];
   const groupExs=day.exercises.filter(e=>e.group===group);
   const ex=groupExs[idx];
@@ -672,18 +791,18 @@ function updateEx(group,idx,field,value){
 }
 
 function clearDay(){
-  if(currentUser === 'aluno') return;
+  if(currentUserRole === 'aluno') return;
   if(!confirm('Limpar o dia?'))return;
   state.days[state.activeDay].exercises=[];
   state.days[state.activeDay].notes='';
   persist();render();
 }
 
-function saveFicha(){ if(currentUser !== 'aluno') { flushNotes(); state.fichaName=document.getElementById('fichaName').value; persist(); showToast('✅ Salvo!'); } }
+function saveFicha(){ if(currentUserRole !== 'aluno') { flushNotes(); state.fichaName=document.getElementById('fichaName').value; persist(); showToast('✅ Salvo!'); } }
 function printFicha(){ flushNotes(); window.print(); }
 
 function exportJSON(){
-  if(currentUser !== 'admin') return;
+  if(currentUserRole !== 'admin') return;
   const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -691,7 +810,7 @@ function exportJSON(){
   a.click();
 }
 
-function importJSON(){ if(currentUser === 'admin') document.getElementById('importInput').click(); }
+function importJSON(){ if(currentUserRole === 'admin') document.getElementById('importInput').click(); }
 function handleImport(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
@@ -704,11 +823,11 @@ function handleImport(e){
   reader.readAsText(file);
 }
 
-function toggleMobileSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+function toggleMobileSidebar(){ if(currentUserRole !== 'aluno') document.getElementById('sidebar').classList.toggle('open'); }
 function closeMobileSidebar(){ document.getElementById('sidebar').classList.remove('open'); }
 
-document.getElementById('fichaName').addEventListener('input',e=>{ if(currentUser !== 'aluno') state.fichaName=e.target.value;});
-document.getElementById('notesArea').addEventListener('input',e=>{ if(currentUser !== 'aluno') state.days[state.activeDay].notes=e.target.value;});
+document.getElementById('fichaName').addEventListener('input',e=>{ if(currentUserRole !== 'aluno') state.fichaName=e.target.value;});
+document.getElementById('notesArea').addEventListener('input',e=>{ if(currentUserRole !== 'aluno') state.days[state.activeDay].notes=e.target.value;});
 
 // Inicializar aplicativo
 verificarSessao();
